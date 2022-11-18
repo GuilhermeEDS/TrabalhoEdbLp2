@@ -1,8 +1,9 @@
+SRC=`find . -name "*.java"`
 OUT=ProjetoUnidade3.jar
 
 ProjetoUnidade3:
-	javac *.java
+	javac $(SRC)
 	jar cfm $(OUT) MANIFEST.MF *.class
 
 clean:
-	rm *.class *.jar
+	rm `find . -name "*.class"` $(OUT)
