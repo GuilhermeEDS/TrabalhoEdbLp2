@@ -10,7 +10,6 @@ public class ProcessadorRede {
     }
 
     private void recursao(LinkedList<Casa> casasDisponiveis, Ligacao solucaoAtual) {
-        if (!solucaoAtual.isValido())
     }
 
     public Casa[] processar(InformacoesArquivo informacoesArquivo) {

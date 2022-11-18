@@ -1,30 +1,45 @@
+import java.util.ArrayList;
+
 public class InformacoesArquivo {
-    private Ligacao[] ligacoes;
-    private Integer d;
+    private ArrayList<Ligacao> ligacoes;
+    private Integer maximoLigacoes;
 
     InformacoesArquivo() {
-        this.ligacoes = new Ligacao[] {};
-        this.d = 0;
+        this.ligacoes = new ArrayList<Ligacao>();
+        this.maximoLigacoes = 0;
     }
 
-    InformacoesArquivo(Ligacao[] ligacoes, Integer d) {
+    InformacoesArquivo(ArrayList<Ligacao> ligacoes, Integer d) {
         this.ligacoes = ligacoes;
-        this.d = d;
+        this.maximoLigacoes = d;
     }
 
-    public Ligacao[] getLigacoes() {
+    public ArrayList<Ligacao> getLigacoes() {
         return ligacoes;
     }
 
-    public void setLigacoes(Ligacao[] ligacoes) {
+    public void setLigacoes(ArrayList<Ligacao> ligacoes) {
         this.ligacoes = ligacoes;
     }
 
-    public Integer getD() {
-        return d;
+    public Integer getMaximoLigacoes() {
+        return maximoLigacoes;
     }
 
-    public void setD(Integer d) {
-        this.d = d;
+    public void setMaximoLigacoes(Integer maximoLigacoes) {
+        this.maximoLigacoes = maximoLigacoes;
+    }
+
+    @Override
+    public String toString() {
+        String resultado = "";
+
+        resultado += "Máximo de ligações: " + maximoLigacoes + "\n";
+
+        for (Ligacao ligacao : ligacoes) {
+            resultado += ligacao + "\n";
+        }
+
+        return resultado;
     }
 }

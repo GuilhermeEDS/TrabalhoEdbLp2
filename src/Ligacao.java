@@ -21,4 +21,9 @@ public class Ligacao {
     public Integer getCusto() {
         return custo;
     }
+
+    @Override
+    public String toString() {
+        return casa1.getId() + " -> " + casa2.getId() + " : " + custo;
+    }
 }

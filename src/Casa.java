@@ -1,9 +1,14 @@
 public class Casa {
-    String id;
+    int id;
     int nArestas;
 
-    Casa(String id) {
+    Casa(int id) {
         this.id = id;
+        this.nArestas = 0;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setnArestas(int nArestas) {
@@ -13,5 +18,4 @@ public class Casa {
     public int getnArestas() {
         return nArestas;
     }
-
 }
