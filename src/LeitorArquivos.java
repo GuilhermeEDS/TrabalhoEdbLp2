@@ -2,24 +2,29 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
-public class LeitorArquivos {
-    public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws Exception {
-        List<String> linhasArquivo = null;
+import dominio.*;
+import dominio.excecoes.ArquivoInvalido;
 
+public class LeitorArquivos {
+    public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {
+        List<String> linhasArquivo = null;
         try {
             linhasArquivo = Files.readAllLines(Paths.get(caminhoArquivo));
         } catch (IOException e) {
-            throw new Exception("Erro ao ler arquivo de valores");
+            throw new ArquivoInvalido("Não foi possível ler o arquivo");
         }
 
-        if (linhasArquivo.size() == 0)
-            throw new Exception("Arquivo vazio");
-        if (linhasArquivo.size() == 1)
-            throw new Exception("Ligações não informadas");
+        if (linhasArquivo.size() == 0) {
+            throw new ArquivoInvalido("O arquivo está vazio");
+        }
 
-        var informacoesGerais = linhasArquivo.get(0).split(" ");
+        if (linhasArquivo.size() == 1) {
+            throw new ArquivoInvalido("As ligações entre as casas não foram informadas");
+        }
+
+        String[] informacoesGerais = linhasArquivo.get(0).split(" ");
         if (informacoesGerais.length != 2) {
-            throw new Exception("Primeira linha inválida");
+            throw new ArquivoInvalido("A primeira linha está inválida");
         }
 
         var quantidadeCasas = Integer.parseInt(informacoesGerais[0]);
@@ -29,13 +34,14 @@ public class LeitorArquivos {
         for (int indiceCasaAtual = 0; indiceCasaAtual < quantidadeCasas - 1; indiceCasaAtual++) {
             String[] linhaAtual = linhasArquivo.get(indiceCasaAtual + 1).split(" ");
             if (linhaAtual.length != (quantidadeCasas - indiceCasaAtual - 1)) {
-                throw new Exception("Número de conexões incorretas para a casa " + indiceCasaAtual);
+                throw new ArquivoInvalido("Número de conexões incorretas para a casa " + indiceCasaAtual);
             }
+
             for (int i = 0; i < linhaAtual.length; i++) {
-                ligacoes.add(new Ligacao(
-                        new Casa(indiceCasaAtual),
-                        new Casa(indiceCasaAtual + i + 1),
-                        Integer.parseInt(linhaAtual[i])));
+                Casa casa1 = new Casa(indiceCasaAtual);
+                Casa casa2 = new Casa(indiceCasaAtual + i + 1);
+                Integer custo = Integer.parseInt(linhaAtual[i]);
+                ligacoes.add(new Ligacao(casa1, casa2, custo));
             }
 
         }

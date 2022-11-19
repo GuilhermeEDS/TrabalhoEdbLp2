@@ -1,10 +1,12 @@
+package dominio;
+
 public class Ligacao {
     private Casa casa1;
     private Casa casa2;
 
     private Integer custo;
 
-    Ligacao(Casa casa1, Casa casa2, Integer custo) {
+    public Ligacao(Casa casa1, Casa casa2, Integer custo) {
         this.casa1 = casa1;
         this.casa2 = casa2;
         this.custo = custo;

@@ -1,15 +1,17 @@
+package dominio;
+
 import java.util.ArrayList;
 
 public class InformacoesArquivo {
     private ArrayList<Ligacao> ligacoes;
     private Integer maximoLigacoes;
 
-    InformacoesArquivo() {
+    public InformacoesArquivo() {
         this.ligacoes = new ArrayList<Ligacao>();
         this.maximoLigacoes = 0;
     }
 
-    InformacoesArquivo(ArrayList<Ligacao> ligacoes, Integer d) {
+    public InformacoesArquivo(ArrayList<Ligacao> ligacoes, Integer d) {
         this.ligacoes = ligacoes;
         this.maximoLigacoes = d;
     }

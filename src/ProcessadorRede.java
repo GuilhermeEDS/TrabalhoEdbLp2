@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import dominio.*;
+
 public class ProcessadorRede {
     private int maximoLigacoes;
     private LinkedList<Ligacao> solucoes = new LinkedList<Ligacao>();

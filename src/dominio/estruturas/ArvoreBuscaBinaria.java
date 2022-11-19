@@ -1,4 +1,4 @@
-package DataStructure.BinarySearchTree;
+package dominio.estruturas;
 
 public class ArvoreBuscaBinaria {
     public No raiz;
