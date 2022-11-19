@@ -3,7 +3,6 @@ package dominio;
 public class Ligacao {
     private Casa casa1;
     private Casa casa2;
-
     private Integer custo;
 
     public Ligacao(Casa casa1, Casa casa2, Integer custo) {
@@ -28,4 +27,5 @@ public class Ligacao {
     public String toString() {
         return casa1.getId() + " -> " + casa2.getId() + " : " + custo;
     }
+
 }

@@ -31,8 +31,5 @@ public class Main {
 
         System.out.print(informacoesArquivo);
 
-        ArvoreBuscaBinaria bst = new ArvoreBuscaBinaria(0);
-
-        System.out.println(bst.buscar(0));
     }
 }
