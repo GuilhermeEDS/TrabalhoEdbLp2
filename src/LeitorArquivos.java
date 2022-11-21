@@ -46,6 +46,6 @@ public class LeitorArquivos {
 
         }
 
-        return new InformacoesArquivo(ligacoes, maximoLigacoes);
+        return new InformacoesArquivo(quantidadeCasas, maximoLigacoes, ligacoes);
     }
 }

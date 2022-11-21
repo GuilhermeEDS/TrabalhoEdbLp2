@@ -3,33 +3,27 @@ package dominio;
 import java.util.ArrayList;
 
 public class InformacoesArquivo {
-    private ArrayList<Ligacao> ligacoes;
+    private Integer numeroCasas;
     private Integer maximoLigacoes;
 
-    public InformacoesArquivo() {
-        this.ligacoes = new ArrayList<Ligacao>();
-        this.maximoLigacoes = 0;
-    }
+    private ArrayList<Ligacao> ligacoes;
 
-    public InformacoesArquivo(ArrayList<Ligacao> ligacoes, Integer d) {
+    public InformacoesArquivo(Integer numeroCasas, Integer maximoLigacoes, ArrayList<Ligacao> ligacoes) {
+        this.numeroCasas = numeroCasas;
+        this.maximoLigacoes = maximoLigacoes;
         this.ligacoes = ligacoes;
-        this.maximoLigacoes = d;
     }
 
-    public ArrayList<Ligacao> getLigacoes() {
-        return ligacoes;
-    }
-
-    public void setLigacoes(ArrayList<Ligacao> ligacoes) {
-        this.ligacoes = ligacoes;
+    public Integer getNumeroCasas() {
+        return numeroCasas;
     }
 
     public Integer getMaximoLigacoes() {
         return maximoLigacoes;
     }
 
-    public void setMaximoLigacoes(Integer maximoLigacoes) {
-        this.maximoLigacoes = maximoLigacoes;
+    public ArrayList<Ligacao> getLigacoes() {
+        return ligacoes;
     }
 
     @Override

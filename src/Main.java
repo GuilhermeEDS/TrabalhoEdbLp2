@@ -1,5 +1,4 @@
 import dominio.InformacoesArquivo;
-import dominio.estruturas.ArvoreBuscaBinaria;
 import dominio.excecoes.ArquivoInvalido;
 
 public class Main {
@@ -29,7 +28,7 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        System.out.print(informacoesArquivo);
-
+        ProcessadorRede processadorRede = new ProcessadorRede(informacoesArquivo);
+        processadorRede.processar();
     }
 }

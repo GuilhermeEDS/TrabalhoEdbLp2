@@ -8,7 +8,7 @@ public class Conjunto {
     private Ligacao ligacao;
 
     private Conjunto(Ligacao ligacao) {
-        pai = null;
+        pai = this;
         rank = 0;
         this.ligacao = ligacao;
     }
@@ -25,7 +25,7 @@ public class Conjunto {
         return ligacao;
     }
 
-    static Conjunto makeSet(Ligacao ligacao) {
+    public static Conjunto makeSet(Ligacao ligacao) {
         return new Conjunto(ligacao);
     }
 
@@ -51,7 +51,7 @@ public class Conjunto {
 
     Conjunto find() {
         Conjunto conjunto = this;
-        while (conjunto.pai != null) {
+        while (conjunto.pai != this) {
             conjunto = conjunto.pai;
         }
         return conjunto;
