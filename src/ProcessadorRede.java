@@ -11,15 +11,6 @@ public class ProcessadorRede {
         this.informacoesArquivo = informacoesArquivo;
     }
 
-    private ArrayList<Conjunto> novoConjuntoDisjunto() {
-        var conjuntos = new ArrayList<Conjunto>();
-        for (Ligacao ligacao : informacoesArquivo.getLigacoes()) {
-            conjuntos.add(Conjunto.makeSet(ligacao));
-        }
-
-        return conjuntos;
-    }
-
     private static ArrayList<ArrayList<Integer>> copy(ArrayList<ArrayList<Integer>> list) {
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
         for (ArrayList<Integer> subLista : list) {
@@ -58,7 +49,7 @@ public class ProcessadorRede {
     }
 
     public ArrayList<Conjunto> processar() {
-        var res = ProcessadorRede.todosPossiveis(informacoesArquivo.getLigacoes().size());
+        var res = ProcessadorRede.todosPossiveis(informacoesArquivo.getLigacoes().size() - 1);
         var filteredRes = ProcessadorRede.filtrarPorTamanho(res, informacoesArquivo.getNumeroCasas() - 1);
 
         for (var lt : filteredRes) {
@@ -67,8 +58,6 @@ public class ProcessadorRede {
             }
             System.out.println();
         }
-
-        ArrayList<Conjunto> conjuntos = novoConjuntoDisjunto();
 
         return null;
     }

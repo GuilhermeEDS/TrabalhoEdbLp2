@@ -1,16 +1,16 @@
 package dominio.estruturas;
 
-import dominio.Ligacao;
+import dominio.*;
 
-public class Conjunto {
+public class Conjunto<T> {
     private Conjunto pai;
     private int rank;
-    private Ligacao ligacao;
+    private T item;
 
-    private Conjunto(Ligacao ligacao) {
+    private Conjunto(T item) {
         pai = this;
         rank = 0;
-        this.ligacao = ligacao;
+        this.item = item;
     }
 
     int getRank() {
@@ -21,12 +21,8 @@ public class Conjunto {
         this.rank = rank;
     }
 
-    public Ligacao getLigacao() {
-        return ligacao;
-    }
-
-    public static Conjunto makeSet(Ligacao ligacao) {
-        return new Conjunto(ligacao);
+    public T getItem() {
+        return item;
     }
 
     void union(Conjunto conjunto) {
