@@ -1,8 +1,6 @@
-import java.util.ArrayList;
+import java.util.*;
 
-import dominio.Casa;
-import dominio.InformacoesArquivo;
-import dominio.Ligacao;
+import dominio.*;
 import dominio.estruturas.Conjunto;
 
 public class ProcessadorRede {
@@ -12,52 +10,59 @@ public class ProcessadorRede {
         this.informacoesArquivo = informacoesArquivo;
     }
 
-    private static ArrayList<ArrayList<Integer>> copy(ArrayList<ArrayList<Integer>> list) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+    private static ArrayList<ArrayList<Integer>> copiar(ArrayList<ArrayList<Integer>> list) {
+        ArrayList<ArrayList<Integer>> copia = new ArrayList<ArrayList<Integer>>();
         for (ArrayList<Integer> subLista : list) {
             ArrayList<Integer> copiaSubLista = new ArrayList<Integer>();
             copiaSubLista.addAll(subLista);
-            res.add(copiaSubLista);
+            copia.add(copiaSubLista);
         }
-        return res;
+        return copia;
     }
 
-    private static ArrayList<ArrayList<Integer>> todosPossiveis(Integer idFinal) {
+    private static ArrayList<ArrayList<Integer>> todosPossiveiscomTamanhoMaximo(int idFinal, int tamanho) {
         if (idFinal < 0) {
-            ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-            res.add(new ArrayList<Integer>());
-            return res;
+            ArrayList<ArrayList<Integer>> listaComListaVazia = new ArrayList<ArrayList<Integer>>();
+            listaComListaVazia.add(new ArrayList<Integer>());
+            return listaComListaVazia;
         }
 
-        ArrayList<ArrayList<Integer>> todosPossiveisMenosUm = todosPossiveis(idFinal - 1);
-        ArrayList<ArrayList<Integer>> copia = copy(todosPossiveisMenosUm);
+        ArrayList<ArrayList<Integer>> todosPossiveisMenosUm = todosPossiveiscomTamanhoMaximo(idFinal - 1, tamanho);
+
+        ArrayList<ArrayList<Integer>> copia = copiar(todosPossiveisMenosUm);
         for (ArrayList<Integer> possibilidade : copia) {
-            possibilidade.add(idFinal);
+            if (possibilidade.size() < tamanho) {
+                possibilidade.add(idFinal);
+            }
         }
         todosPossiveisMenosUm.addAll(copia);
 
         return todosPossiveisMenosUm;
     }
 
-    private static <T> ArrayList<ArrayList<T>> filtrarPorTamanho(ArrayList<ArrayList<T>> arrayList, int size) {
-        ArrayList<ArrayList<T>> result = new ArrayList<ArrayList<T>>();
-        for (ArrayList<T> element : arrayList) {
-            if (element.size() == size) {
-                result.add(element);
-            }
-        }
-        return result;
+    private static <T> List<ArrayList<T>> filtrarPorTamanho(ArrayList<ArrayList<T>> lista, int size) {
+        return lista.stream().filter(item -> item.size() == size).toList();
     }
 
-    private Integer soma_rede(ArrayList<Integer> rede) {
-        Integer retorno = 0;
+    private static List<ArrayList<Integer>> todosPossiveisComTamanho(int idFinal, int tamanho) {
+        return filtrarPorTamanho(todosPossiveiscomTamanhoMaximo(idFinal, tamanho), tamanho);
+    }
 
-        ArrayList<Conjunto<Casa>> ligacoes = new ArrayList<>();
-        for (int i = 0; i < informacoesArquivo.getNumeroCasas(); i++) {
-            ligacoes.add(new Conjunto<Casa>(new Casa(i)));
+    private static ArrayList<Conjunto<Casa>> criarConjuntosUnitariosCasas(int numeroCasas) {
+        ArrayList<Conjunto<Casa>> conjuntos = new ArrayList<>();
+        for (int i = 0; i < numeroCasas; i++) {
+            conjuntos.add(new Conjunto<Casa>(new Casa(i)));
         }
 
-        for (var a : rede) {
+        return conjuntos;
+    }
+
+    private Integer somaRede(ArrayList<Integer> rede) {
+        Integer retorno = 0;
+
+        ArrayList<Conjunto<Casa>> ligacoes = criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
+
+        for (Integer a : rede) {
             Ligacao aux = informacoesArquivo.getLigacoes().get(a);
             Conjunto<Casa> c1 = ligacoes.get(aux.getCasa1().getId());
             Conjunto<Casa> c2 = ligacoes.get(aux.getCasa2().getId());
@@ -82,27 +87,21 @@ public class ProcessadorRede {
     }
 
     public ArrayList<Conjunto<Casa>> processar() {
-        var res = ProcessadorRede.todosPossiveis(informacoesArquivo.getLigacoes().size() - 1);
-        var filteredRes = ProcessadorRede.filtrarPorTamanho(res, informacoesArquivo.getNumeroCasas() - 1);
+        List<ArrayList<Integer>> res = todosPossiveisComTamanho(
+                informacoesArquivo.getLigacoes().size() - 1,
+                informacoesArquivo.getNumeroCasas() - 1);
 
-        int min = -1;
-        Integer soma = null;
-        for (int i = 0; i < filteredRes.size(); i++) {
-            if(min == -1){
-                    var ligacoes = filteredRes.get(i);
-                    soma = soma_rede(ligacoes);
+        Integer melhorIndiceLigacao = 0;
+        Integer melhorSoma = null;
+        for (int indiceLigacao = 0; indiceLigacao < res.size(); indiceLigacao++) {
+            Integer soma = somaRede(res.get(indiceLigacao));
+            if (melhorSoma == null || (soma != null && soma < melhorSoma)) {
+                melhorIndiceLigacao = indiceLigacao;
+                melhorSoma = soma;
+            }
+        }
 
-                    if(soma != null)
-                        min = i; 
-            }else{
-                Integer somaAux = soma_rede(filteredRes.get(i)); 
-                    if (somaAux!= null && somaAux < soma) {
-                        min = i;
-                    }
-                }
-            }  
-
-        filteredRes.get(min).forEach(System.out::println);
+        res.get(melhorIndiceLigacao).forEach(System.out::println);
 
         return null;
     }
