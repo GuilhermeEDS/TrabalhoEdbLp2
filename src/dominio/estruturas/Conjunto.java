@@ -1,13 +1,11 @@
 package dominio.estruturas;
 
-import dominio.*;
-
 public class Conjunto<T> {
-    private Conjunto pai;
+    private Conjunto<T> pai;
     private int rank;
     private T item;
 
-    private Conjunto(T item) {
+    public Conjunto(T item) {
         pai = this;
         rank = 0;
         this.item = item;
@@ -25,7 +23,7 @@ public class Conjunto<T> {
         return item;
     }
 
-    void union(Conjunto conjunto) {
+    public void union(Conjunto<T> conjunto) {
         if (areMerged(conjunto)) {
             return;
         }
@@ -33,7 +31,7 @@ public class Conjunto<T> {
         this.find().link(conjunto.find());
     }
 
-    void link(Conjunto conjunto) {
+    void link(Conjunto<T> conjunto) {
         if (rank > conjunto.rank) {
             conjunto.pai = this;
             return;
@@ -45,15 +43,15 @@ public class Conjunto<T> {
         }
     }
 
-    Conjunto find() {
-        Conjunto conjunto = this;
-        while (conjunto.pai != this) {
+    Conjunto<T> find() {
+        Conjunto<T> conjunto = this;
+        while (conjunto.pai != conjunto) {
             conjunto = conjunto.pai;
         }
         return conjunto;
     }
 
-    boolean areMerged(Conjunto conjunto) {
+    public boolean areMerged(Conjunto<T> conjunto) {
         return this.find() == conjunto.find();
     }
 }

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import dominio.Casa;
 import dominio.InformacoesArquivo;
 import dominio.Ligacao;
 import dominio.estruturas.Conjunto;
@@ -48,16 +49,60 @@ public class ProcessadorRede {
         return result;
     }
 
-    public ArrayList<Conjunto> processar() {
+    private Integer soma_rede(ArrayList<Integer> rede) {
+        Integer retorno = 0;
+
+        ArrayList<Conjunto<Casa>> ligacoes = new ArrayList<>();
+        for (int i = 0; i < informacoesArquivo.getNumeroCasas(); i++) {
+            ligacoes.add(new Conjunto<Casa>(new Casa(i)));
+        }
+
+        for (var a : rede) {
+            Ligacao aux = informacoesArquivo.getLigacoes().get(a);
+            Conjunto<Casa> c1 = ligacoes.get(aux.getCasa1().getId());
+            Conjunto<Casa> c2 = ligacoes.get(aux.getCasa2().getId());
+
+            if (c1.areMerged(c2)) {
+                return null;
+            }
+
+            if (c1.getItem().getQuantidadeArestas() == informacoesArquivo
+                    .getMaximoLigacoes()
+                    || (ligacoes.get(aux.getCasa2().getId())).getItem().getQuantidadeArestas() == informacoesArquivo
+                            .getMaximoLigacoes()) {
+                return null;
+            }
+
+            c1.union(c2);
+            c1.getItem().setQuantidadeArestas(c1.getItem().getQuantidadeArestas() + 1);
+            c2.getItem().setQuantidadeArestas(c2.getItem().getQuantidadeArestas() + 1);
+            retorno += aux.getCusto();
+        }
+        return retorno;
+    }
+
+    public ArrayList<Conjunto<Casa>> processar() {
         var res = ProcessadorRede.todosPossiveis(informacoesArquivo.getLigacoes().size() - 1);
         var filteredRes = ProcessadorRede.filtrarPorTamanho(res, informacoesArquivo.getNumeroCasas() - 1);
 
-        for (var lt : filteredRes) {
-            for (Integer i : lt) {
-                System.out.print(i + " ");
-            }
-            System.out.println();
-        }
+        int min = -1;
+        Integer soma = null;
+        for (int i = 0; i < filteredRes.size(); i++) {
+            if(min == -1){
+                    var ligacoes = filteredRes.get(i);
+                    soma = soma_rede(ligacoes);
+
+                    if(soma != null)
+                        min = i; 
+            }else{
+                Integer somaAux = soma_rede(filteredRes.get(i)); 
+                    if (somaAux!= null && somaAux < soma) {
+                        min = i;
+                    }
+                }
+            }  
+
+        filteredRes.get(min).forEach(System.out::println);
 
         return null;
     }
