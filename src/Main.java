@@ -1,4 +1,4 @@
-import dominio.InformacoesArquivo;
+import dominio.*;
 import excecoes.ArquivoInvalido;
 
 public class Main {
@@ -28,7 +28,21 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        ProcessadorSimples processadorRede = new ProcessadorSimples(informacoesArquivo);
-        processadorRede.processar();
+        ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
+        var res = processadorComplexo.particoes(informacoesArquivo.getLigacoes());
+        for (var particao : res) {
+            for (var lig : particao) {
+                System.out.println(
+                        (lig.getTipoLigacaoParticao() == TipoLigacaoParticao.OBRIGATORIA ? "S" : "N")
+                                + lig.getCasa1().getId()
+                                + " -> "
+                                + lig.getCasa2().getId()
+                                + " = " + lig.getCusto());
+            }
+            System.out.println("=======");
+        }
+        // ProcessadorSimples processadorRede = new
+        // ProcessadorSimples(informacoesArquivo);
+        // processadorRede.processar();
     }
 }

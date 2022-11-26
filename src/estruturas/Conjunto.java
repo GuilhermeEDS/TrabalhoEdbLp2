@@ -43,7 +43,7 @@ public class Conjunto<T> {
         }
     }
 
-    Conjunto<T> find() {
+    public Conjunto<T> find() {
         Conjunto<T> conjunto = this;
         while (conjunto.pai != conjunto) {
             conjunto = conjunto.pai;
