@@ -1,5 +1,5 @@
 import dominio.InformacoesArquivo;
-import dominio.excecoes.ArquivoInvalido;
+import excecoes.ArquivoInvalido;
 
 public class Main {
     public static String parseArgs(String[] args) throws Exception {
@@ -28,7 +28,7 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        ProcessadorRede processadorRede = new ProcessadorRede(informacoesArquivo);
+        ProcessadorSimples processadorRede = new ProcessadorSimples(informacoesArquivo);
         processadorRede.processar();
     }
 }

@@ -1,4 +1,4 @@
-package dominio.excecoes;
+package excecoes;
 
 public class ArquivoInvalido extends Exception {
     public ArquivoInvalido(String mensagem) {

@@ -1,13 +1,12 @@
 import java.util.*;
 
 import dominio.*;
-import dominio.estruturas.Conjunto;
+import estruturas.Conjunto;
+import interfaces.ProcessadorLigacoes;
 
-public class ProcessadorRede {
-    private InformacoesArquivo informacoesArquivo;
-
-    public ProcessadorRede(InformacoesArquivo informacoesArquivo) {
-        this.informacoesArquivo = informacoesArquivo;
+public class ProcessadorSimples extends ProcessadorLigacoes {
+    public ProcessadorSimples(InformacoesArquivo informacoesArquivo) {
+        super(informacoesArquivo);
     }
 
     private static ArrayList<ArrayList<Integer>> copiar(ArrayList<ArrayList<Integer>> list) {
@@ -86,7 +85,7 @@ public class ProcessadorRede {
         return retorno;
     }
 
-    public ArrayList<Conjunto<Casa>> processar() {
+    public ArrayList<ArrayList<Ligacao>> processar() {
         List<ArrayList<Integer>> res = todosPossiveisComTamanho(
                 informacoesArquivo.getLigacoes().size() - 1,
                 informacoesArquivo.getNumeroCasas() - 1);

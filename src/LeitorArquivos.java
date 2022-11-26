@@ -3,7 +3,7 @@ import java.nio.file.*;
 import java.util.*;
 
 import dominio.*;
-import dominio.excecoes.ArquivoInvalido;
+import excecoes.ArquivoInvalido;
 
 public class LeitorArquivos {
     public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {

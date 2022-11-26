@@ -1,4 +1,4 @@
-package dominio.estruturas;
+package estruturas;
 
 public class No {
     int valor;

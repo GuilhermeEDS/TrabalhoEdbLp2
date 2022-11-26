@@ -1,4 +1,4 @@
-package dominio.estruturas;
+package estruturas;
 
 public class ArvoreBuscaBinaria {
     public No raiz;
