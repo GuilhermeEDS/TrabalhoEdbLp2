@@ -2,8 +2,9 @@ package main;
 
 import java.util.*;
 
-import dominio.*;
+import estrutura.Conjunto;
 import abstrato.ProcessadorLigacoes;
+import dominio.*;
 
 public class ProcessadorSimples extends ProcessadorLigacoes {
     public ProcessadorSimples(InformacoesArquivo informacoesArquivo) {
@@ -57,6 +58,42 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
     private static ArrayList<ArrayList<Integer>> todosPossiveisComTamanho(
             int idFinal, int tamanho) {
         return filtrarPorTamanho(todosPossiveiscomTamanhoMaximo(idFinal, tamanho), tamanho);
+    }
+
+    private Integer somaLigacoes(ArrayList<Ligacao> ligacoes) {
+        Integer retorno = 0;
+
+        ArrayList<Conjunto<Casa>> conjuntos = criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
+
+        for (Ligacao ligacao : ligacoes) {
+            Conjunto<Casa> c1 = conjuntos.get(ligacao.getCasa1().getId());
+            Conjunto<Casa> c2 = conjuntos.get(ligacao.getCasa2().getId());
+
+            if (c1.areMerged(c2)) {
+                return null;
+            }
+
+            if (c1.getItem().getQuantidadeArestas() == informacoesArquivo
+                    .getMaximoLigacoes()
+                    || c2.getItem().getQuantidadeArestas() == informacoesArquivo
+                            .getMaximoLigacoes()) {
+                return null;
+            }
+
+            c1.union(c2);
+            c1.getItem().setQuantidadeArestas(c1.getItem().getQuantidadeArestas() + 1);
+            c2.getItem().setQuantidadeArestas(c2.getItem().getQuantidadeArestas() + 1);
+            retorno += ligacao.getCusto();
+        }
+
+        Conjunto<Casa> primeiro = conjuntos.get(0).find();
+        for (var conjunto : conjuntos) {
+            if (!primeiro.areMerged(conjunto)) {
+                return null;
+            }
+        }
+
+        return retorno;
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {

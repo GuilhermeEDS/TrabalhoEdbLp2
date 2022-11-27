@@ -27,5 +27,4 @@ public class Ligacao {
     public String toString() {
         return casa1.getId() + " -> " + casa2.getId() + " : " + custo;
     }
-
 }

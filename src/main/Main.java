@@ -33,13 +33,13 @@ public class Main {
         ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
         var res = processadorComplexo.particoes(informacoesArquivo.getLigacoes());
         for (var particao : res) {
-            for (var lig : particao) {
-                System.out.println(
-                        (lig.getTipoLigacaoParticao() == TipoLigacaoParticao.OBRIGATORIA ? "S" : "N")
-                                + lig.getCasa1().getId()
-                                + " -> "
-                                + lig.getCasa2().getId()
-                                + " = " + lig.getCusto());
+            for (var ligacao : particao.getLigacoesObrigatorias()) {
+                System.out.println("S " + ligacao.getCasa1().getId() + " -> " + ligacao.getCasa2().getId() + " = "
+                        + ligacao.getCusto());
+            }
+            for (var ligacao : particao.getLigacoesRestritas()) {
+                System.out.println("N " + ligacao.getCasa1().getId() + " -> " + ligacao.getCasa2().getId() + " = "
+                        + ligacao.getCusto());
             }
             System.out.println("=======");
         }
