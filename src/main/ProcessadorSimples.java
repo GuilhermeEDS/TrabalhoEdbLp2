@@ -116,8 +116,13 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
             }
         }
 
-        res.get(melhorIndiceLigacao).forEach(System.out::println);
+        var resultado = new ArrayList<ArrayList<Ligacao>>();
+        var melhor = new ArrayList<Ligacao>();
+        for (var ligacao : res.get(melhorIndiceLigacao)) {
+            melhor.add(informacoesArquivo.getLigacoes().get(ligacao));
+        }
+        resultado.add(melhor);
 
-        return null;
+        return resultado;
     }
 }

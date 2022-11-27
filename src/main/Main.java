@@ -30,21 +30,18 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
-        var res = processadorComplexo.particoes(informacoesArquivo.getLigacoes());
-        for (var particao : res) {
-            for (var ligacao : particao.getLigacoesObrigatorias()) {
-                System.out.println("S " + ligacao.getCasa1().getId() + " -> " + ligacao.getCasa2().getId() + " = "
-                        + ligacao.getCusto());
-            }
-            for (var ligacao : particao.getLigacoesRestritas()) {
-                System.out.println("N " + ligacao.getCasa1().getId() + " -> " + ligacao.getCasa2().getId() + " = "
-                        + ligacao.getCusto());
-            }
-            System.out.println("=======");
+        ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
+        var res = processadorSimples.processar();
+        for (var ligacao : res.get(0)) {
+            System.out.println(ligacao);
         }
-        // ProcessadorSimples processadorRede = new
-        // ProcessadorSimples(informacoesArquivo);
-        // processadorRede.processar();
+
+        System.out.println("==========");
+
+        ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
+        var res2 = processadorComplexo.processar();
+        for (var ligacao : res2.get(0)) {
+            System.out.println(ligacao);
+        }
     }
 }

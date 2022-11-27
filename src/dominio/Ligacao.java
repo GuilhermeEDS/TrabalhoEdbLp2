@@ -3,9 +3,9 @@ package dominio;
 public class Ligacao {
     private Casa casa1;
     private Casa casa2;
-    private int custo;
+    private Integer custo;
 
-    public Ligacao(Casa casa1, Casa casa2, int custo) {
+    public Ligacao(Casa casa1, Casa casa2, Integer custo) {
         this.casa1 = casa1;
         this.casa2 = casa2;
         this.custo = custo;
@@ -19,7 +19,7 @@ public class Ligacao {
         return casa2;
     }
 
-    public int getCusto() {
+    public Integer getCusto() {
         return custo;
     }
 

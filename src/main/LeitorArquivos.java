@@ -45,8 +45,9 @@ public class LeitorArquivos {
                 Integer custo = Integer.parseInt(linhaAtual[i]);
                 ligacoes.add(new Ligacao(casa1, casa2, custo));
             }
-
         }
+
+        ligacoes.sort((a1, a2) -> a1.getCusto().compareTo(a2.getCusto()));
 
         return new InformacoesArquivo(quantidadeCasas, maximoLigacoes, ligacoes);
     }
