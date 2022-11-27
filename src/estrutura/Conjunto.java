@@ -1,4 +1,4 @@
-package estruturas;
+package estrutura;
 
 public class Conjunto<T> {
     private Conjunto<T> pai;

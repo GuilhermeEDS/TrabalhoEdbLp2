@@ -3,7 +3,7 @@ package abstrato;
 import java.util.ArrayList;
 
 import dominio.*;
-import estruturas.*;
+import estrutura.*;
 
 public abstract class ProcessadorLigacoes {
     protected InformacoesArquivo informacoesArquivo;

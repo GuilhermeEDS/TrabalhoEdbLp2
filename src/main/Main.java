@@ -1,5 +1,7 @@
+package main;
+
 import dominio.*;
-import excecoes.ArquivoInvalido;
+import excecao.ArquivoInvalido;
 
 public class Main {
     public static String parseArgs(String[] args) throws Exception {

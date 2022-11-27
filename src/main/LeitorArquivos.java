@@ -1,9 +1,11 @@
+package main;
+
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
 import dominio.*;
-import excecoes.ArquivoInvalido;
+import excecao.ArquivoInvalido;
 
 public class LeitorArquivos {
     public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {

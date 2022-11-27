@@ -1,4 +1,4 @@
-package estruturas;
+package estrutura;
 
 public class No {
     int valor;
