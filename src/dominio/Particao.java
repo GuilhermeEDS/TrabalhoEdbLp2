@@ -30,6 +30,19 @@ public class Particao {
         return new Particao(ligacoesObrigatorias, ligacoesRestritas);
     }
 
+    public ArrayList<Ligacao> ligacoesOpcionais(ArrayList<Ligacao> ligacoes) {
+        ArrayList<Ligacao> ligacoesOpcionais = new ArrayList<Ligacao>();
+
+        for (Ligacao ligacao : ligacoes) {
+            if (!ligacoesObrigatorias.contains(ligacao)
+                    && !ligacoesRestritas.contains(ligacao)) {
+                ligacoesOpcionais.add(ligacao);
+            }
+        }
+
+        return ligacoesOpcionais;
+    }
+
     public ArrayList<Ligacao> getLigacoesObrigatorias() {
         return ligacoesObrigatorias;
     }

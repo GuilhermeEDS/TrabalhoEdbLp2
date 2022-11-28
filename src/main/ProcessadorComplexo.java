@@ -82,30 +82,6 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
         return true;
     }
 
-    /*
-     * algorithm Kruskal(G) is
-     * F:= ∅
-     * for each v ∈ G.V do
-     * MAKE-SET(v)
-     * for each (u, v) in G.E ordered by weight(u, v), increasing do
-     * if FIND-SET(u) ≠ FIND-SET(v) then
-     * F:= F ∪ {(u, v)} ∪ {(v, u)}
-     * UNION(FIND-SET(u), FIND-SET(v))
-     * return F
-     */
-
-    private ArrayList<Ligacao> ligacoesOpcionais(Particao particao) {
-        ArrayList<Ligacao> ligacoes = new ArrayList<Ligacao>();
-        for (Ligacao ligacao : informacoesArquivo.getLigacoes()) {
-            if (!particao.getLigacoesObrigatorias().contains(ligacao)
-                    && !particao.getLigacoesRestritas().contains(ligacao)) {
-                ligacoes.add(ligacao);
-            }
-        }
-
-        return ligacoes;
-    }
-
     private ArrayList<Ligacao> kruskal(Particao particao) {
         ArrayList<Conjunto<Casa>> conjuntos = ProcessadorLigacoes
                 .criarConjuntosUnitariosCasas(
@@ -127,7 +103,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             ligacoes.add(ligacao);
         }
 
-        ArrayList<Ligacao> ligacoesOpcionais = ligacoesOpcionais(particao);
+        ArrayList<Ligacao> ligacoesOpcionais = particao.ligacoesOpcionais(informacoesArquivo.getLigacoes());
         for (Ligacao ligacao : ligacoesOpcionais) {
             Conjunto<Casa> conjuntoCasa1 = conjuntos.get(ligacao.getCasa1().getId());
             Conjunto<Casa> conjuntoCasa2 = conjuntos.get(ligacao.getCasa2().getId());
