@@ -1,5 +1,6 @@
 package main;
 
+import abstrato.ProcessadorLigacoes;
 import dominio.*;
 import excecao.ArquivoInvalido;
 
@@ -30,18 +31,14 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
-        var res = processadorSimples.processar();
-        for (var ligacao : res.get(0)) {
-            System.out.println(ligacao);
-        }
-
-        System.out.println("==========");
-
         ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
-        var res2 = processadorComplexo.processar();
-        for (var ligacao : res2.get(0)) {
-            System.out.println(ligacao);
+        var res = processadorComplexo.processar();
+        for (var ligacoes : res) {
+            for (var ligacao : ligacoes) {
+                System.out.println(ligacao);
+            }
+            System.out.println("\nCusto total: " + ProcessadorLigacoes.calcularCusto(ligacoes) + "\n");
+            System.out.println("====================");
         }
     }
 }

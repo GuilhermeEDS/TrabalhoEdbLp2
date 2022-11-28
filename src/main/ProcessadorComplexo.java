@@ -3,7 +3,6 @@ package main;
 import java.util.*;
 
 import dominio.*;
-import estrutura.*;
 import abstrato.ProcessadorLigacoes;
 
 public class ProcessadorComplexo extends ProcessadorLigacoes {
@@ -166,18 +165,42 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     public ArrayList<ArrayList<Ligacao>> processar() {
         ArrayList<ArrayList<Ligacao>> resultados = new ArrayList<ArrayList<Ligacao>>();
 
-        // Calcula MST (Kruskal) usando todas as ligações (1)
-        ArrayList<Ligacao> melhor = kruskal(new Particao(new ArrayList<Ligacao>(), new ArrayList<Ligacao>()));
-        resultados.add(melhor);
+        ArrayList<Ligacao> melhorGeral = kruskal(new Particao(new ArrayList<Ligacao>(), new ArrayList<Ligacao>()));
+        resultados.add(melhorGeral);
 
-        // Particiona as ligações de (1)
-        ArrayList<Particao> particoesMelhor = particoes(melhor);
+        ArrayList<Particao> particoes = particoes(melhorGeral);
 
-        // Pega a melhor MST com as restrições (2)
+        while (true) {
+            int melhorIndiceParticao = 0;
+            Integer melhorCusto = null;
 
-        // (2) é a segunda melhor
-        // Faz MST de 2
-        // Particiona as ligações de (2) que não estão em (1)
+            for (int i = 1; i < particoes.size(); i++) {
+                Particao particao = particoes.get(i);
+                ArrayList<Ligacao> mst = kruskal(particao);
+
+                if (mst == null) {
+                    continue;
+                }
+
+                Integer custo = calcularCusto(mst);
+                if (melhorCusto == null || custo < melhorCusto) {
+                    melhorIndiceParticao = i;
+                    melhorCusto = custo;
+                }
+            }
+
+            if (melhorCusto == null) {
+                break;
+            }
+
+            Particao melhorParticao = particoes.get(melhorIndiceParticao);
+            var mst = kruskal(melhorParticao);
+            resultados.add(mst);
+            particoes.remove(melhorIndiceParticao);
+
+            // Calcular sub partições
+            // Adicionar as sub partições à lista
+        }
 
         return resultados;
     }

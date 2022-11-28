@@ -2,7 +2,6 @@ package main;
 
 import java.util.*;
 
-import estrutura.Conjunto;
 import abstrato.ProcessadorLigacoes;
 import dominio.*;
 

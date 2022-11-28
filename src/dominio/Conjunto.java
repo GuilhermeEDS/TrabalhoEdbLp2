@@ -1,4 +1,4 @@
-package estrutura;
+package dominio;
 
 public class Conjunto<T> {
     private Conjunto<T> pai;

@@ -3,7 +3,6 @@ package abstrato;
 import java.util.ArrayList;
 
 import dominio.*;
-import estrutura.*;
 
 public abstract class ProcessadorLigacoes {
     protected InformacoesArquivo informacoesArquivo;
@@ -14,7 +13,15 @@ public abstract class ProcessadorLigacoes {
 
     public abstract ArrayList<ArrayList<Ligacao>> processar();
 
-    protected static ArrayList<Conjunto<Casa>> criarConjuntosUnitariosCasas(int numeroCasas) {
+    public static int calcularCusto(ArrayList<Ligacao> ligacoes) {
+        int custo = 0;
+        for (Ligacao ligacao : ligacoes) {
+            custo += ligacao.getCusto();
+        }
+        return custo;
+    }
+
+    public static ArrayList<Conjunto<Casa>> criarConjuntosUnitariosCasas(int numeroCasas) {
         ArrayList<Conjunto<Casa>> conjuntos = new ArrayList<Conjunto<Casa>>();
         for (int i = 0; i < numeroCasas; i++) {
             conjuntos.add(new Conjunto<Casa>(new Casa(i)));
