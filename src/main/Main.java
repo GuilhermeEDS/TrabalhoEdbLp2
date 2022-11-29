@@ -31,14 +31,12 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
+        ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
+        processadorSimples.processar();
+
         ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
         var res = processadorComplexo.processar();
-        for (var ligacoes : res) {
-            for (var ligacao : ligacoes) {
-                System.out.println(ligacao);
-            }
-            System.out.println("\nCusto total: " + ProcessadorLigacoes.calcularCusto(ligacoes) + "\n");
-            System.out.println("====================");
-        }
+        System.out.println("Complexo: " + res.size());
+
     }
 }

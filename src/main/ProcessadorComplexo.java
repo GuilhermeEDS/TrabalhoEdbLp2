@@ -138,6 +138,19 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
         return ligacoes;
     }
 
+    private ArrayList<Ligacao> diferenca(ArrayList<Ligacao> ligacoes, Particao particao) {
+        ArrayList<Ligacao> diferenca = new ArrayList<Ligacao>();
+
+        for (Ligacao ligacao : ligacoes) {
+            if (!particao.getLigacoesObrigatorias().contains(ligacao)
+                    && !particao.getLigacoesRestritas().contains(ligacao)) {
+                diferenca.add(ligacao);
+            }
+        }
+
+        return diferenca;
+    }
+
     public ArrayList<ArrayList<Ligacao>> processar() {
         ArrayList<ArrayList<Ligacao>> resultados = new ArrayList<ArrayList<Ligacao>>();
 
@@ -150,7 +163,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             int melhorIndiceParticao = 0;
             Integer melhorCusto = null;
 
-            for (int i = 1; i < particoes.size(); i++) {
+            for (int i = 0; i < particoes.size(); i++) {
                 Particao particao = particoes.get(i);
                 ArrayList<Ligacao> mst = kruskal(particao);
 
@@ -170,12 +183,31 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             }
 
             Particao melhorParticao = particoes.get(melhorIndiceParticao);
-            var mst = kruskal(melhorParticao);
+            ArrayList<Ligacao> mst = kruskal(melhorParticao);
             resultados.add(mst);
             particoes.remove(melhorIndiceParticao);
 
-            // Calcular sub partições
-            // Adicionar as sub partições à lista
+            ArrayList<Ligacao> diff = diferenca(mst, melhorParticao);
+            for (Ligacao ligacao : diff) {
+                System.out.println(ligacao);
+            }
+            return null;
+            // if (diff.isEmpty()) {
+            // continue;
+            // }
+            // ArrayList<Particao> particoesDiff = particoes(diff);
+            // for (Particao particao : particoesDiff) {
+            // particao.getLigacoesObrigatorias().addAll(melhorParticao.getLigacoesObrigatorias());
+            // particao.getLigacoesObrigatorias().sort((a1, a2) ->
+            // a1.getCusto().compareTo(a2.getCusto()));
+
+            // particao.getLigacoesRestritas().addAll(melhorParticao.getLigacoesRestritas());
+            // particao.getLigacoesRestritas().sort((a1, a2) ->
+            // a1.getCusto().compareTo(a2.getCusto()));
+            // }
+
+            // particoes.addAll(particoesDiff);
+
         }
 
         return resultados;

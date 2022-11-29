@@ -33,9 +33,9 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
         ArrayList<ArrayList<Integer>> copia = copiar(todosPossiveisMenosUm);
         for (ArrayList<Integer> possibilidade : copia) {
-            if (possibilidade.size() < tamanho) {
-                possibilidade.add(idFinal);
-            }
+            // if (possibilidade.size() < tamanho) {
+            possibilidade.add(idFinal);
+            // }
         }
         todosPossiveisMenosUm.addAll(copia);
 
@@ -96,6 +96,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
+        int total = 0;
         ArrayList<ArrayList<Integer>> res = todosPossiveisComTamanho(
                 informacoesArquivo.getLigacoes().size() - 1,
                 informacoesArquivo.getNumeroCasas() - 1);
@@ -109,6 +110,9 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
             }
 
             Integer soma = somaLigacoes(ligacoes);
+            if (soma != null) {
+                total += 1;
+            }
             if (melhorSoma == null || (soma != null && soma < melhorSoma)) {
                 melhorIndiceLigacao = indiceLigacao;
                 melhorSoma = soma;
@@ -122,6 +126,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
         }
         resultado.add(melhor);
 
+        System.out.println("Simples: " + total);
         return resultado;
     }
 }

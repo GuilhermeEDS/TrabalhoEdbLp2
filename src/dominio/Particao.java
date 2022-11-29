@@ -11,25 +11,6 @@ public class Particao {
         this.ligacoesRestritas = ligacoesRestritas;
     }
 
-    public Particao diferenca(Particao particao) {
-        ArrayList<Ligacao> ligacoesObrigatorias = new ArrayList<Ligacao>();
-        ArrayList<Ligacao> ligacoesRestritas = new ArrayList<Ligacao>();
-
-        for (var ligacao : this.ligacoesObrigatorias) {
-            if (!particao.getLigacoesObrigatorias().contains(ligacao)) {
-                ligacoesObrigatorias.add(ligacao);
-            }
-        }
-
-        for (var ligacao : this.ligacoesRestritas) {
-            if (!particao.getLigacoesRestritas().contains(ligacao)) {
-                ligacoesRestritas.add(ligacao);
-            }
-        }
-
-        return new Particao(ligacoesObrigatorias, ligacoesRestritas);
-    }
-
     public ArrayList<Ligacao> ligacoesOpcionais(ArrayList<Ligacao> ligacoes) {
         ArrayList<Ligacao> ligacoesOpcionais = new ArrayList<Ligacao>();
 
