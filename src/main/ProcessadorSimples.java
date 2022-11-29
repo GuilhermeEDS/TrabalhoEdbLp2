@@ -12,30 +12,26 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
     private static ArrayList<ArrayList<Integer>> copiar(
             ArrayList<ArrayList<Integer>> list) {
-        ArrayList<ArrayList<Integer>> copia = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<Integer>> copia = new ArrayList<>();
         for (ArrayList<Integer> subLista : list) {
-            ArrayList<Integer> copiaSubLista = new ArrayList<Integer>();
-            copiaSubLista.addAll(subLista);
+            ArrayList<Integer> copiaSubLista = new ArrayList<>(subLista);
             copia.add(copiaSubLista);
         }
         return copia;
     }
 
-    private static ArrayList<ArrayList<Integer>> todosPossiveiscomTamanhoMaximo(
-            int idFinal, int tamanho) {
+    private static ArrayList<ArrayList<Integer>> todosPossiveiscomTamanhoMaximo(int idFinal) {
         if (idFinal < 0) {
-            ArrayList<ArrayList<Integer>> listaComListaVazia = new ArrayList<ArrayList<Integer>>();
-            listaComListaVazia.add(new ArrayList<Integer>());
+            ArrayList<ArrayList<Integer>> listaComListaVazia = new ArrayList<>();
+            listaComListaVazia.add(new ArrayList<>());
             return listaComListaVazia;
         }
 
-        ArrayList<ArrayList<Integer>> todosPossiveisMenosUm = todosPossiveiscomTamanhoMaximo(idFinal - 1, tamanho);
+        ArrayList<ArrayList<Integer>> todosPossiveisMenosUm = todosPossiveiscomTamanhoMaximo(idFinal - 1);
 
         ArrayList<ArrayList<Integer>> copia = copiar(todosPossiveisMenosUm);
         for (ArrayList<Integer> possibilidade : copia) {
-            // if (possibilidade.size() < tamanho) {
             possibilidade.add(idFinal);
-            // }
         }
         todosPossiveisMenosUm.addAll(copia);
 
@@ -44,7 +40,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
     private static <T> ArrayList<ArrayList<T>> filtrarPorTamanho(
             ArrayList<ArrayList<T>> lista, int size) {
-        ArrayList<ArrayList<T>> listaFiltrada = new ArrayList<ArrayList<T>>();
+        ArrayList<ArrayList<T>> listaFiltrada = new ArrayList<>();
         for (ArrayList<T> elemento : lista) {
             if (elemento.size() == size) {
                 listaFiltrada.add(elemento);
@@ -56,7 +52,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
     private static ArrayList<ArrayList<Integer>> todosPossiveisComTamanho(
             int idFinal, int tamanho) {
-        return filtrarPorTamanho(todosPossiveiscomTamanhoMaximo(idFinal, tamanho), tamanho);
+        return filtrarPorTamanho(todosPossiveiscomTamanhoMaximo(idFinal), tamanho);
     }
 
     private Integer somaLigacoes(ArrayList<Ligacao> ligacoes) {
@@ -75,7 +71,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
             if (c1.getItem().getQuantidadeArestas() == informacoesArquivo
                     .getMaximoLigacoes()
                     || c2.getItem().getQuantidadeArestas() == informacoesArquivo
-                            .getMaximoLigacoes()) {
+                    .getMaximoLigacoes()) {
                 return null;
             }
 
@@ -96,23 +92,19 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
-        int total = 0;
         ArrayList<ArrayList<Integer>> res = todosPossiveisComTamanho(
                 informacoesArquivo.getLigacoes().size() - 1,
                 informacoesArquivo.getNumeroCasas() - 1);
 
-        Integer melhorIndiceLigacao = 0;
+        Integer melhorIndiceLigacao = null;
         Integer melhorSoma = null;
         for (int indiceLigacao = 0; indiceLigacao < res.size(); indiceLigacao++) {
-            ArrayList<Ligacao> ligacoes = new ArrayList<Ligacao>();
+            ArrayList<Ligacao> ligacoes = new ArrayList<>();
             for (var indice : res.get(indiceLigacao)) {
                 ligacoes.add(informacoesArquivo.getLigacoes().get(indice));
             }
 
             Integer soma = somaLigacoes(ligacoes);
-            if (soma != null) {
-                total += 1;
-            }
             if (melhorSoma == null || (soma != null && soma < melhorSoma)) {
                 melhorIndiceLigacao = indiceLigacao;
                 melhorSoma = soma;
@@ -120,13 +112,15 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
         }
 
         var resultado = new ArrayList<ArrayList<Ligacao>>();
-        var melhor = new ArrayList<Ligacao>();
-        for (var ligacao : res.get(melhorIndiceLigacao)) {
-            melhor.add(informacoesArquivo.getLigacoes().get(ligacao));
-        }
-        resultado.add(melhor);
+        if (melhorIndiceLigacao != null) {
+            var melhor = new ArrayList<Ligacao>();
+            for (var ligacao : res.get(melhorIndiceLigacao)) {
+                melhor.add(informacoesArquivo.getLigacoes().get(ligacao));
+            }
 
-        System.out.println("Simples: " + total);
+            resultado.add(melhor);
+        }
+
         return resultado;
     }
 }

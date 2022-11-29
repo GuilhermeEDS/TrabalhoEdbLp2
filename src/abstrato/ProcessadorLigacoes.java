@@ -22,9 +22,9 @@ public abstract class ProcessadorLigacoes {
     }
 
     public static ArrayList<Conjunto<Casa>> criarConjuntosUnitariosCasas(int numeroCasas) {
-        ArrayList<Conjunto<Casa>> conjuntos = new ArrayList<Conjunto<Casa>>();
+        ArrayList<Conjunto<Casa>> conjuntos = new ArrayList<>();
         for (int i = 0; i < numeroCasas; i++) {
-            conjuntos.add(new Conjunto<Casa>(new Casa(i)));
+            conjuntos.add(new Conjunto<>(new Casa(i)));
         }
 
         return conjuntos;

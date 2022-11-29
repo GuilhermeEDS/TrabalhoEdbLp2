@@ -3,7 +3,7 @@ package dominio;
 public class Conjunto<T> {
     private Conjunto<T> pai;
     private int rank;
-    private T item;
+    private final T item;
 
     public Conjunto(T item) {
         pai = this;

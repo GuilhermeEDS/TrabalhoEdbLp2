@@ -3,8 +3,8 @@ package dominio;
 import java.util.ArrayList;
 
 public class Particao {
-    private ArrayList<Ligacao> ligacoesObrigatorias;
-    private ArrayList<Ligacao> ligacoesRestritas;
+    private final ArrayList<Ligacao> ligacoesObrigatorias;
+    private final ArrayList<Ligacao> ligacoesRestritas;
 
     public Particao(ArrayList<Ligacao> ligacoesObrigatorias, ArrayList<Ligacao> ligacoesRestritas) {
         this.ligacoesObrigatorias = ligacoesObrigatorias;
@@ -12,7 +12,7 @@ public class Particao {
     }
 
     public ArrayList<Ligacao> ligacoesOpcionais(ArrayList<Ligacao> ligacoes) {
-        ArrayList<Ligacao> ligacoesOpcionais = new ArrayList<Ligacao>();
+        ArrayList<Ligacao> ligacoesOpcionais = new ArrayList<>();
 
         for (Ligacao ligacao : ligacoes) {
             if (!ligacoesObrigatorias.contains(ligacao)
@@ -28,15 +28,7 @@ public class Particao {
         return ligacoesObrigatorias;
     }
 
-    public void setLigacoesObrigatorias(ArrayList<Ligacao> ligacoesObrigatorias) {
-        this.ligacoesObrigatorias = ligacoesObrigatorias;
-    }
-
     public ArrayList<Ligacao> getLigacoesRestritas() {
         return ligacoesRestritas;
-    }
-
-    public void setLigacoesRestritas(ArrayList<Ligacao> ligacoesRestritas) {
-        this.ligacoesRestritas = ligacoesRestritas;
     }
 }

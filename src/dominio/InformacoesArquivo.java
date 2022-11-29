@@ -3,10 +3,9 @@ package dominio;
 import java.util.ArrayList;
 
 public class InformacoesArquivo {
-    private Integer numeroCasas;
-    private Integer maximoLigacoes;
-
-    private ArrayList<Ligacao> ligacoes;
+    private final Integer numeroCasas;
+    private final Integer maximoLigacoes;
+    private final ArrayList<Ligacao> ligacoes;
 
     public InformacoesArquivo(Integer numeroCasas, Integer maximoLigacoes, ArrayList<Ligacao> ligacoes) {
         this.numeroCasas = numeroCasas;
@@ -28,14 +27,14 @@ public class InformacoesArquivo {
 
     @Override
     public String toString() {
-        String resultado = "";
+        StringBuilder resultado = new StringBuilder();
 
-        resultado += "Máximo de ligações: " + maximoLigacoes + "\n";
+        resultado.append("Máximo de ligações: ").append(maximoLigacoes).append("\n");
 
         for (Ligacao ligacao : ligacoes) {
-            resultado += ligacao + "\n";
+            resultado.append(ligacao).append("\n");
         }
 
-        return resultado;
+        return resultado.toString();
     }
 }

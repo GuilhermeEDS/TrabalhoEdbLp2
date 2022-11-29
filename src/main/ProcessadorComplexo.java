@@ -11,13 +11,13 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     }
 
     public ArrayList<Particao> particoes(ArrayList<Ligacao> ligacoes) {
-        ArrayList<Particao> particoes = new ArrayList<Particao>();
+        ArrayList<Particao> particoes = new ArrayList<>();
 
         for (int index = 0; index < ligacoes.size(); index++) {
-            ArrayList<Ligacao> ligacoesRestritas = new ArrayList<Ligacao>();
+            ArrayList<Ligacao> ligacoesRestritas = new ArrayList<>();
             ligacoesRestritas.add(ligacoes.get(index));
 
-            ArrayList<Ligacao> ligacoesObrigatorias = new ArrayList<Ligacao>();
+            ArrayList<Ligacao> ligacoesObrigatorias = new ArrayList<>();
             for (int j = 0; j < index; j++) {
                 ligacoesObrigatorias.add(ligacoes.get(j));
             }
@@ -32,7 +32,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     }
 
     private Boolean temCasaBloqueada(ArrayList<Ligacao> ligacoesRestritas) {
-        ArrayList<Integer> numeroLigacoesBloqueadas = new ArrayList<Integer>(
+        ArrayList<Integer> numeroLigacoesBloqueadas = new ArrayList<>(
                 Collections.nCopies(informacoesArquivo.getNumeroCasas(), 0));
         for (Ligacao ligacao : ligacoesRestritas) {
             int idCasa1 = ligacao.getCasa1().getId();
@@ -70,7 +70,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             if (c1.getItem().getQuantidadeArestas() == informacoesArquivo
                     .getMaximoLigacoes()
                     || c2.getItem().getQuantidadeArestas() == informacoesArquivo
-                            .getMaximoLigacoes()) {
+                    .getMaximoLigacoes()) {
                 return false;
             }
 
@@ -87,7 +87,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
                 .criarConjuntosUnitariosCasas(
                         informacoesArquivo.getNumeroCasas());
 
-        ArrayList<Ligacao> ligacoes = new ArrayList<Ligacao>();
+        ArrayList<Ligacao> ligacoes = new ArrayList<>();
         for (Ligacao ligacao : particao.getLigacoesObrigatorias()) {
             Conjunto<Casa> conjuntoCasa1 = conjuntos.get(ligacao.getCasa1().getId());
             Conjunto<Casa> conjuntoCasa2 = conjuntos.get(ligacao.getCasa2().getId());
@@ -139,7 +139,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     }
 
     private ArrayList<Ligacao> diferenca(ArrayList<Ligacao> ligacoes, Particao particao) {
-        ArrayList<Ligacao> diferenca = new ArrayList<Ligacao>();
+        ArrayList<Ligacao> diferenca = new ArrayList<>();
 
         for (Ligacao ligacao : ligacoes) {
             if (!particao.getLigacoesObrigatorias().contains(ligacao)
@@ -152,9 +152,12 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
-        ArrayList<ArrayList<Ligacao>> resultados = new ArrayList<ArrayList<Ligacao>>();
+        ArrayList<ArrayList<Ligacao>> resultados = new ArrayList<>();
 
-        ArrayList<Ligacao> melhorGeral = kruskal(new Particao(new ArrayList<Ligacao>(), new ArrayList<Ligacao>()));
+        ArrayList<Ligacao> melhorGeral = kruskal(new Particao(new ArrayList<>(), new ArrayList<>()));
+        if (melhorGeral == null) {
+            return resultados;
+        }
         resultados.add(melhorGeral);
 
         ArrayList<Particao> particoes = particoes(melhorGeral);
@@ -171,7 +174,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
                     continue;
                 }
 
-                Integer custo = calcularCusto(mst);
+                int custo = calcularCusto(mst);
                 if (melhorCusto == null || custo < melhorCusto) {
                     melhorIndiceParticao = i;
                     melhorCusto = custo;
@@ -188,26 +191,21 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             particoes.remove(melhorIndiceParticao);
 
             ArrayList<Ligacao> diff = diferenca(mst, melhorParticao);
-            for (Ligacao ligacao : diff) {
-                System.out.println(ligacao);
+
+            if (diff.isEmpty()) {
+                continue;
             }
-            return null;
-            // if (diff.isEmpty()) {
-            // continue;
-            // }
-            // ArrayList<Particao> particoesDiff = particoes(diff);
-            // for (Particao particao : particoesDiff) {
-            // particao.getLigacoesObrigatorias().addAll(melhorParticao.getLigacoesObrigatorias());
-            // particao.getLigacoesObrigatorias().sort((a1, a2) ->
-            // a1.getCusto().compareTo(a2.getCusto()));
 
-            // particao.getLigacoesRestritas().addAll(melhorParticao.getLigacoesRestritas());
-            // particao.getLigacoesRestritas().sort((a1, a2) ->
-            // a1.getCusto().compareTo(a2.getCusto()));
-            // }
+            ArrayList<Particao> particoesDiff = particoes(diff);
+            for (Particao particao : particoesDiff) {
+                particao.getLigacoesObrigatorias().addAll(melhorParticao.getLigacoesObrigatorias());
+                particao.getLigacoesObrigatorias().sort(Comparator.comparing(Ligacao::getCusto));
 
-            // particoes.addAll(particoesDiff);
+                particao.getLigacoesRestritas().addAll(melhorParticao.getLigacoesRestritas());
+                particao.getLigacoesRestritas().sort(Comparator.comparing(Ligacao::getCusto));
+            }
 
+            particoes.addAll(particoesDiff);
         }
 
         return resultados;

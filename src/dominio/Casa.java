@@ -1,7 +1,7 @@
 package dominio;
 
 public class Casa {
-    private int id;
+    private final int id;
     private int quantidadeArestas;
 
     public Casa(int id) {

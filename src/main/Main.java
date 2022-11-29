@@ -14,7 +14,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        String caminhoArquivo = null;
+        String caminhoArquivo;
         try {
             caminhoArquivo = parseArgs(args);
         } catch (Exception e) {

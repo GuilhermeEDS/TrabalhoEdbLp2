@@ -9,7 +9,7 @@ import excecao.ArquivoInvalido;
 
 public class LeitorArquivos {
     public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {
-        List<String> linhasArquivo = null;
+        List<String> linhasArquivo;
         try {
             linhasArquivo = Files.readAllLines(Paths.get(caminhoArquivo));
         } catch (IOException e) {
@@ -32,7 +32,7 @@ public class LeitorArquivos {
         var quantidadeCasas = Integer.parseInt(informacoesGerais[0]);
         var maximoLigacoes = Integer.parseInt(informacoesGerais[1]);
 
-        ArrayList<Ligacao> ligacoes = new ArrayList<Ligacao>(quantidadeCasas * (quantidadeCasas - 1) / 2);
+        ArrayList<Ligacao> ligacoes = new ArrayList<>(quantidadeCasas * (quantidadeCasas - 1) / 2);
         for (int indiceCasaAtual = 0; indiceCasaAtual < quantidadeCasas - 1; indiceCasaAtual++) {
             String[] linhaAtual = linhasArquivo.get(indiceCasaAtual + 1).split(" ");
             if (linhaAtual.length != (quantidadeCasas - indiceCasaAtual - 1)) {
@@ -47,7 +47,7 @@ public class LeitorArquivos {
             }
         }
 
-        ligacoes.sort((a1, a2) -> a1.getCusto().compareTo(a2.getCusto()));
+        ligacoes.sort(Comparator.comparing(Ligacao::getCusto));
 
         return new InformacoesArquivo(quantidadeCasas, maximoLigacoes, ligacoes);
     }
