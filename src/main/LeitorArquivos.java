@@ -42,7 +42,7 @@ public class LeitorArquivos {
             for (int i = 0; i < linhaAtual.length; i++) {
                 Casa casa1 = new Casa(indiceCasaAtual);
                 Casa casa2 = new Casa(indiceCasaAtual + i + 1);
-                Integer custo = Integer.parseInt(linhaAtual[i]);
+                int custo = Integer.parseInt(linhaAtual[i]);
                 ligacoes.add(new Ligacao(casa1, casa2, custo));
             }
         }

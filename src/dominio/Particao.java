@@ -24,6 +24,21 @@ public class Particao {
         return ligacoesOpcionais;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder res = new StringBuilder();
+
+        for (Ligacao ligacao : getLigacoesObrigatorias()) {
+            res.append(" ").append(ligacao.minimo()).append(" ");
+        }
+
+        for (Ligacao ligacao : getLigacoesRestritas()) {
+            res.append("!").append(ligacao.minimo()).append(" ");
+        }
+
+        return res.toString();
+    }
+
     public ArrayList<Ligacao> getLigacoesObrigatorias() {
         return ligacoesObrigatorias;
     }

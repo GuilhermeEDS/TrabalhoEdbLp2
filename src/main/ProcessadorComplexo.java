@@ -1,9 +1,10 @@
 package main;
 
-import java.util.*;
-
-import dominio.*;
 import abstrato.ProcessadorLigacoes;
+import dominio.*;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ProcessadorComplexo extends ProcessadorLigacoes {
     public ProcessadorComplexo(InformacoesArquivo informacoesArquivo) {
@@ -23,69 +24,15 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             }
 
             Particao particao = new Particao(ligacoesObrigatorias, ligacoesRestritas);
-            if (particaoValida(particao)) {
-                particoes.add(particao);
-            }
+            particoes.add(particao);
         }
 
         return particoes;
     }
 
-    private Boolean temCasaBloqueada(ArrayList<Ligacao> ligacoesRestritas) {
-        ArrayList<Integer> numeroLigacoesBloqueadas = new ArrayList<>(
-                Collections.nCopies(informacoesArquivo.getNumeroCasas(), 0));
-        for (Ligacao ligacao : ligacoesRestritas) {
-            int idCasa1 = ligacao.getCasa1().getId();
-
-            numeroLigacoesBloqueadas.set(idCasa1, numeroLigacoesBloqueadas.get(idCasa1) + 1);
-            if (numeroLigacoesBloqueadas.get(idCasa1) >= informacoesArquivo.getNumeroCasas() - 1) {
-                return true;
-            }
-
-            int idCasa2 = ligacao.getCasa2().getId();
-            numeroLigacoesBloqueadas.set(idCasa2, numeroLigacoesBloqueadas.get(idCasa2) + 1);
-            if (numeroLigacoesBloqueadas.get(idCasa2) >= informacoesArquivo.getNumeroCasas() - 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean particaoValida(Particao particao) {
-        if (temCasaBloqueada(particao.getLigacoesRestritas())) {
-            return false;
-        }
-
-        ArrayList<Conjunto<Casa>> conjuntos = criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
-
-        for (Ligacao ligacao : particao.getLigacoesObrigatorias()) {
-            Conjunto<Casa> c1 = conjuntos.get(ligacao.getCasa1().getId());
-            Conjunto<Casa> c2 = conjuntos.get(ligacao.getCasa2().getId());
-
-            if (c1.areMerged(c2)) {
-                return false;
-            }
-
-            if (c1.getItem().getQuantidadeArestas() == informacoesArquivo
-                    .getMaximoLigacoes()
-                    || c2.getItem().getQuantidadeArestas() == informacoesArquivo
-                    .getMaximoLigacoes()) {
-                return false;
-            }
-
-            c1.union(c2);
-            c1.getItem().setQuantidadeArestas(c1.getItem().getQuantidadeArestas() + 1);
-            c2.getItem().setQuantidadeArestas(c2.getItem().getQuantidadeArestas() + 1);
-        }
-
-        return true;
-    }
-
     private ArrayList<Ligacao> kruskal(Particao particao) {
         ArrayList<Conjunto<Casa>> conjuntos = ProcessadorLigacoes
-                .criarConjuntosUnitariosCasas(
-                        informacoesArquivo.getNumeroCasas());
+                .criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
 
         ArrayList<Ligacao> ligacoes = new ArrayList<>();
         for (Ligacao ligacao : particao.getLigacoesObrigatorias()) {
@@ -171,6 +118,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
                 ArrayList<Ligacao> mst = kruskal(particao);
 
                 if (mst == null) {
+                    particoes.remove(particao);
                     continue;
                 }
 
@@ -197,11 +145,12 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
             }
 
             ArrayList<Particao> particoesDiff = particoes(diff);
+
             for (Particao particao : particoesDiff) {
                 particao.getLigacoesObrigatorias().addAll(melhorParticao.getLigacoesObrigatorias());
-                particao.getLigacoesObrigatorias().sort(Comparator.comparing(Ligacao::getCusto));
-
                 particao.getLigacoesRestritas().addAll(melhorParticao.getLigacoesRestritas());
+
+                particao.getLigacoesObrigatorias().sort(Comparator.comparing(Ligacao::getCusto));
                 particao.getLigacoesRestritas().sort(Comparator.comparing(Ligacao::getCusto));
             }
 

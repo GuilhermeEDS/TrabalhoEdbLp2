@@ -11,11 +11,11 @@ public class Conjunto<T> {
         this.item = item;
     }
 
-    int getRank() {
+    private int getRank() {
         return rank;
     }
 
-    void setRank(int rank) {
+    private void setRank(int rank) {
         this.rank = rank;
     }
 
@@ -31,7 +31,7 @@ public class Conjunto<T> {
         this.find().link(conjunto.find());
     }
 
-    void link(Conjunto<T> conjunto) {
+    private void link(Conjunto<T> conjunto) {
         if (rank > conjunto.rank) {
             conjunto.pai = this;
             return;

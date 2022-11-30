@@ -1,10 +1,11 @@
 package main;
 
-import abstrato.ProcessadorLigacoes;
-import dominio.*;
+import dominio.InformacoesArquivo;
 import excecao.ArquivoInvalido;
 
 public class Main {
+    private static final boolean PROCESSADOR_COMPLEXO = false;
+
     public static String parseArgs(String[] args) throws Exception {
         if (args.length != 1) {
             throw new Exception();
@@ -31,12 +32,25 @@ public class Main {
             System.out.println("Erro ao ler o arquivo: " + e.getMessage());
         }
 
-        ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
-        processadorSimples.processar();
+        if (PROCESSADOR_COMPLEXO) {
+            long inicio = System.nanoTime();
+            ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
+            var res = processadorComplexo.processar();
+            long fim = System.nanoTime();
+            System.out.println("Demorou " + (fim - inicio) / 1000000 + " ms");
 
-        ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
-        var res = processadorComplexo.processar();
-        System.out.println("Complexo: " + res.size());
+            System.out.println("Complexo: " + res.size());
+        } else {
+            long inicio = System.nanoTime();
+            ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
+            var res = processadorSimples.processar();
+            long fim = System.nanoTime();
 
+            System.out.println("Demorou " + (fim - inicio) / 1000000 + " ms");
+            for (var ligacao : res.get(0)) {
+                System.out.println(ligacao);
+            }
+            System.out.println("Custo: " + ProcessadorSimples.calcularCusto(res.get(0)));
+        }
     }
 }
