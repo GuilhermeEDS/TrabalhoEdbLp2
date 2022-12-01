@@ -14,7 +14,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
         super(informacoesArquivo);
     }
 
-    private int somaLigacoes(ArrayList<Ligacao> ligacoes) throws Exception {
+    private int somaLigacoes(ArrayList<Ligacao> ligacoes, Integer melhorSomaAtual) throws Exception {
         int retorno = 0;
 
         ArrayList<Conjunto<Casa>> conjuntos = criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
@@ -33,8 +33,19 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
             c1.union(c2);
             c1.getItem().setQuantidadeArestas(c1.getItem().getQuantidadeArestas() + 1);
+            if (c1.getItem().getQuantidadeArestas() > informacoesArquivo.getMaximoLigacoes()) {
+                throw new Exception();
+            }
+
             c2.getItem().setQuantidadeArestas(c2.getItem().getQuantidadeArestas() + 1);
+            if (c2.getItem().getQuantidadeArestas() > informacoesArquivo.getMaximoLigacoes()) {
+                throw new Exception();
+            }
+
             retorno += ligacao.getCusto();
+            if (melhorSomaAtual != null && retorno > melhorSomaAtual) {
+                throw new Exception();
+            }
         }
 
         Conjunto<Casa> primeiro = conjuntos.get(0).find();
@@ -75,7 +86,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
             }
 
             try {
-                int soma = somaLigacoes(ligacoes);
+                int soma = somaLigacoes(ligacoes, melhorSoma);
                 if (melhorSoma == null || (soma < melhorSoma)) {
                     melhorSoma = soma;
                     melhor = ligacoes;

@@ -4,6 +4,7 @@ import abstrato.ProcessadorLigacoes;
 import dominio.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class ProcessadorComplexo extends ProcessadorLigacoes {
@@ -31,8 +32,7 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     }
 
     private ArrayList<Ligacao> kruskal(Particao particao) {
-        ArrayList<Conjunto<Casa>> conjuntos = ProcessadorLigacoes
-                .criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
+        ArrayList<Conjunto<Casa>> conjuntos = ProcessadorLigacoes.criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
 
         ArrayList<Ligacao> ligacoes = new ArrayList<>();
         for (Ligacao ligacao : particao.getLigacoesObrigatorias()) {
@@ -57,11 +57,6 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
 
             Casa casa1 = conjuntoCasa1.getItem();
             Casa casa2 = conjuntoCasa2.getItem();
-
-            if (casa1.getQuantidadeArestas() >= informacoesArquivo.getMaximoLigacoes()
-                    || casa2.getQuantidadeArestas() >= informacoesArquivo.getMaximoLigacoes()) {
-                continue;
-            }
 
             if (conjuntoCasa1.areMerged(conjuntoCasa2)) {
                 continue;
@@ -89,13 +84,33 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
         ArrayList<Ligacao> diferenca = new ArrayList<>();
 
         for (Ligacao ligacao : ligacoes) {
-            if (!particao.getLigacoesObrigatorias().contains(ligacao)
-                    && !particao.getLigacoesRestritas().contains(ligacao)) {
+            if (!particao.getLigacoesObrigatorias().contains(ligacao) && !particao.getLigacoesRestritas().contains(ligacao)) {
                 diferenca.add(ligacao);
             }
         }
 
         return diferenca;
+    }
+
+    private boolean obedeceMaximoLigacoes(ArrayList<Ligacao> ligacoes) {
+        ArrayList<Integer> quantidadeLigacoesCasa = new ArrayList<>(Collections.nCopies(informacoesArquivo.getNumeroCasas(), 0));
+        for (Ligacao ligacao : ligacoes) {
+            int idCasa1 = ligacao.getCasa1().getId();
+
+
+            quantidadeLigacoesCasa.set(idCasa1, quantidadeLigacoesCasa.get(idCasa1) + 1);
+            if (quantidadeLigacoesCasa.get(idCasa1) > informacoesArquivo.getMaximoLigacoes()) {
+                return false;
+            }
+
+            int idCasa2 = ligacao.getCasa2().getId();
+            quantidadeLigacoesCasa.set(idCasa2, quantidadeLigacoesCasa.get(idCasa2) + 1);
+            if (quantidadeLigacoesCasa.get(idCasa2) > informacoesArquivo.getMaximoLigacoes()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
@@ -105,7 +120,10 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
         if (melhorGeral == null) {
             return resultados;
         }
-        resultados.add(melhorGeral);
+
+        if (obedeceMaximoLigacoes(melhorGeral)) {
+            resultados.add(melhorGeral);
+        }
 
         ArrayList<Particao> particoes = particoes(melhorGeral);
 
@@ -135,7 +153,10 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
 
             Particao melhorParticao = particoes.get(melhorIndiceParticao);
             ArrayList<Ligacao> mst = kruskal(melhorParticao);
-            resultados.add(mst);
+            if (obedeceMaximoLigacoes(mst)) {
+                resultados.add(mst);
+            }
+
             particoes.remove(melhorIndiceParticao);
 
             ArrayList<Ligacao> diff = diferenca(mst, melhorParticao);

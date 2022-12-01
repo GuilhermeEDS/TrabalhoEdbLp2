@@ -4,7 +4,7 @@ import dominio.InformacoesArquivo;
 import excecao.ArquivoInvalido;
 
 public class Main {
-    private static final boolean PROCESSADOR_COMPLEXO = false;
+    private static final boolean PROCESSADOR_COMPLEXO = true;
 
     public static String parseArgs(String[] args) throws Exception {
         if (args.length != 1) {
