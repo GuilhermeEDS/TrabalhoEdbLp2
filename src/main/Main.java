@@ -40,6 +40,16 @@ public class Main {
             System.out.println("Demorou " + (fim - inicio) / 1000000 + " ms");
 
             System.out.println("Complexo: " + res.size());
+
+            System.out.println("Resposta:");
+
+            try {
+                PrintFile.generateFile(res);
+            } catch (Exception e) {
+                System.out.println("DEU ERRO NA HORA DE FAZER O ARQUIVO");
+                System.out.println(e.getMessage());
+            }
+
         } else {
             long inicio = System.nanoTime();
             ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
