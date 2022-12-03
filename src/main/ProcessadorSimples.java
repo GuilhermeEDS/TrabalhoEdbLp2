@@ -57,12 +57,24 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
         return retorno;
     }
 
-    public int quantidadeBitsUm(int valor, int quantidadeBits) {
+    public int quantidadeBitsUm(BigInteger valor, int quantidadeBits) {
         int total = 0;
         for (int i = 0; i < quantidadeBits; i++) {
-            total += (valor >> i) & 1;
+            if (valor.testBit(i)) {
+                total++;
+            }
         }
         return total;
+    }
+
+    private ArrayList<Ligacao> bitsParaLigacoes(BigInteger possibilidadeBits) {
+        ArrayList<Ligacao> ligacoes = new ArrayList<>();
+        for (int i = 0; i < informacoesArquivo.getLigacoes().size(); i++) {
+            if (possibilidadeBits.testBit(i)) {
+                ligacoes.add(informacoesArquivo.getLigacoes().get(i));
+            }
+        }
+        return ligacoes;
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
@@ -71,18 +83,13 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
 
         ArrayList<Ligacao> melhor = null;
         Integer melhorSoma = null;
-        for (int possibilidadeBits = 0; BigInteger.valueOf(possibilidadeBits).compareTo(quantidadeCombinacoesPossiveis) < 0; possibilidadeBits++) {
+        for (BigInteger possibilidadeBits = BigInteger.valueOf(0); possibilidadeBits.compareTo(quantidadeCombinacoesPossiveis) < 0; possibilidadeBits = possibilidadeBits.add(BigInteger.valueOf(1))) {
             int quantidadeBitsUm = quantidadeBitsUm(possibilidadeBits, quantidadeLigacoes);
             if (quantidadeBitsUm != informacoesArquivo.getNumeroCasas() - 1) {
                 continue;
             }
 
-            ArrayList<Ligacao> ligacoes = new ArrayList<>();
-            for (int i = 0; i < quantidadeLigacoes; i++) {
-                if (((possibilidadeBits >> i) & 1) == 1) {
-                    ligacoes.add(informacoesArquivo.getLigacoes().get(i));
-                }
-            }
+            ArrayList<Ligacao> ligacoes = bitsParaLigacoes(possibilidadeBits);
 
             try {
                 int soma = somaLigacoes(ligacoes, melhorSoma);
