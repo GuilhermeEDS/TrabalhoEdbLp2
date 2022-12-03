@@ -15,8 +15,7 @@ public class Particao {
         ArrayList<Ligacao> ligacoesOpcionais = new ArrayList<>();
 
         for (Ligacao ligacao : ligacoes) {
-            if (!ligacoesObrigatorias.contains(ligacao)
-                    && !ligacoesRestritas.contains(ligacao)) {
+            if (!ligacoesObrigatorias.contains(ligacao) && !ligacoesRestritas.contains(ligacao)) {
                 ligacoesOpcionais.add(ligacao);
             }
         }

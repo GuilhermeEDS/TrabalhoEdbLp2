@@ -1,6 +1,5 @@
 package main;
 
-import abstrato.ProcessadorLigacoes;
 import dominio.Casa;
 import dominio.Conjunto;
 import dominio.InformacoesArquivo;
@@ -49,7 +48,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
         }
 
         Conjunto<Casa> primeiro = conjuntos.get(0).find();
-        for (var conjunto : conjuntos) {
+        for (Conjunto<Casa> conjunto : conjuntos) {
             if (!primeiro.areMerged(conjunto)) {
                 throw new Exception();
             }
@@ -67,7 +66,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
     }
 
     public ArrayList<ArrayList<Ligacao>> processar() {
-        final var quantidadeLigacoes = informacoesArquivo.getLigacoes().size();
+        final int quantidadeLigacoes = informacoesArquivo.getLigacoes().size();
         final BigInteger quantidadeCombinacoesPossiveis = new BigInteger("2").pow(quantidadeLigacoes);
 
         ArrayList<Ligacao> melhor = null;
@@ -96,7 +95,7 @@ public class ProcessadorSimples extends ProcessadorLigacoes {
             }
         }
 
-        var resultado = new ArrayList<ArrayList<Ligacao>>();
+        ArrayList<ArrayList<Ligacao>> resultado = new ArrayList<>();
         if (melhor != null) {
             resultado.add(melhor);
         }

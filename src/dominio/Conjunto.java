@@ -1,14 +1,18 @@
 package dominio;
 
 public class Conjunto<T> {
+    private final T item;
     private Conjunto<T> pai;
     private int rank;
-    private final T item;
 
     public Conjunto(T item) {
+        this.item = item;
         pai = this;
         rank = 0;
-        this.item = item;
+    }
+
+    public T getItem() {
+        return item;
     }
 
     private int getRank() {
@@ -17,10 +21,6 @@ public class Conjunto<T> {
 
     private void setRank(int rank) {
         this.rank = rank;
-    }
-
-    public T getItem() {
-        return item;
     }
 
     public void union(Conjunto<T> conjunto) {

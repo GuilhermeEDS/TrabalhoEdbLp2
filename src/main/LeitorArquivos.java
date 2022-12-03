@@ -1,11 +1,16 @@
 package main;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
-
-import dominio.*;
+import dominio.Casa;
+import dominio.InformacoesArquivo;
+import dominio.Ligacao;
 import excecao.ArquivoInvalido;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class LeitorArquivos {
     public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {
@@ -29,8 +34,8 @@ public class LeitorArquivos {
             throw new ArquivoInvalido("A primeira linha está inválida");
         }
 
-        var quantidadeCasas = Integer.parseInt(informacoesGerais[0]);
-        var maximoLigacoes = Integer.parseInt(informacoesGerais[1]);
+        int quantidadeCasas = Integer.parseInt(informacoesGerais[0]);
+        int maximoLigacoes = Integer.parseInt(informacoesGerais[1]);
 
         ArrayList<Ligacao> ligacoes = new ArrayList<>(quantidadeCasas * (quantidadeCasas - 1) / 2);
         for (int indiceCasaAtual = 0; indiceCasaAtual < quantidadeCasas - 1; indiceCasaAtual++) {

@@ -1,11 +1,14 @@
 package main;
 
-import abstrato.ProcessadorLigacoes;
-import dominio.*;
+import dominio.InformacoesArquivo;
+import dominio.Ligacao;
+import dominio.Particao;
+import dominio.ParticaoCache;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class ProcessadorComplexo extends ProcessadorLigacoes {
     public ProcessadorComplexo(InformacoesArquivo informacoesArquivo) {
@@ -29,55 +32,6 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
         }
 
         return particoes;
-    }
-
-    private ArrayList<Ligacao> kruskal(Particao particao) {
-        ArrayList<Conjunto<Casa>> conjuntos = ProcessadorLigacoes.criarConjuntosUnitariosCasas(informacoesArquivo.getNumeroCasas());
-
-        ArrayList<Ligacao> ligacoes = new ArrayList<>();
-        for (Ligacao ligacao : particao.getLigacoesObrigatorias()) {
-            Conjunto<Casa> conjuntoCasa1 = conjuntos.get(ligacao.getCasa1().getId());
-            Conjunto<Casa> conjuntoCasa2 = conjuntos.get(ligacao.getCasa2().getId());
-
-            conjuntoCasa1.union(conjuntoCasa2);
-
-            Casa casa1 = conjuntoCasa1.getItem();
-            Casa casa2 = conjuntoCasa2.getItem();
-
-            casa1.setQuantidadeArestas(casa1.getQuantidadeArestas() + 1);
-            casa2.setQuantidadeArestas(casa2.getQuantidadeArestas() + 1);
-
-            ligacoes.add(ligacao);
-        }
-
-        ArrayList<Ligacao> ligacoesOpcionais = particao.ligacoesOpcionais(informacoesArquivo.getLigacoes());
-        for (Ligacao ligacao : ligacoesOpcionais) {
-            Conjunto<Casa> conjuntoCasa1 = conjuntos.get(ligacao.getCasa1().getId());
-            Conjunto<Casa> conjuntoCasa2 = conjuntos.get(ligacao.getCasa2().getId());
-
-            Casa casa1 = conjuntoCasa1.getItem();
-            Casa casa2 = conjuntoCasa2.getItem();
-
-            if (conjuntoCasa1.areMerged(conjuntoCasa2)) {
-                continue;
-            }
-
-            conjuntoCasa1.union(conjuntoCasa2);
-
-            casa1.setQuantidadeArestas(casa1.getQuantidadeArestas() + 1);
-            casa2.setQuantidadeArestas(casa2.getQuantidadeArestas() + 1);
-
-            ligacoes.add(ligacao);
-        }
-
-        Conjunto<Casa> primeiro = conjuntos.get(0).find();
-        for (Conjunto<Casa> conjunto : conjuntos) {
-            if (!primeiro.areMerged(conjunto)) {
-                return null;
-            }
-        }
-
-        return ligacoes;
     }
 
     private ArrayList<Ligacao> diferenca(ArrayList<Ligacao> ligacoes, Particao particao) {
@@ -116,31 +70,33 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
     public ArrayList<ArrayList<Ligacao>> processar() {
         ArrayList<ArrayList<Ligacao>> resultados = new ArrayList<>();
 
-        ArrayList<Ligacao> melhorGeral = kruskal(new Particao(new ArrayList<>(), new ArrayList<>()));
+        ArrayList<Ligacao> melhorGeral = kruskal(new Particao(new ArrayList<>(), new ArrayList<>()), informacoesArquivo);
         if (melhorGeral == null) {
             return resultados;
         }
 
         if (obedeceMaximoLigacoes(melhorGeral)) {
             resultados.add(melhorGeral);
+            return resultados;
         }
 
-        ArrayList<Particao> particoes = particoes(melhorGeral);
+        ArrayList<Particao> particoesMelhor = particoes(melhorGeral);
+        List<ParticaoCache> particoes = new ArrayList<>();
+        for (Particao particao : particoesMelhor) {
+            try {
+                ParticaoCache particaoCache = new ParticaoCache(particao, informacoesArquivo);
+                particoes.add(particaoCache);
+            } catch (Exception e) {
+                // Não precisa fazer nada
+            }
+        }
 
         while (true) {
             int melhorIndiceParticao = 0;
             Integer melhorCusto = null;
 
             for (int i = 0; i < particoes.size(); i++) {
-                Particao particao = particoes.get(i);
-                ArrayList<Ligacao> mst = kruskal(particao);
-
-                if (mst == null) {
-                    particoes.remove(particao);
-                    continue;
-                }
-
-                int custo = calcularCusto(mst);
+                int custo = particoes.get(i).getCusto();
                 if (melhorCusto == null || custo < melhorCusto) {
                     melhorIndiceParticao = i;
                     melhorCusto = custo;
@@ -151,15 +107,17 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
                 break;
             }
 
-            Particao melhorParticao = particoes.get(melhorIndiceParticao);
-            ArrayList<Ligacao> mst = kruskal(melhorParticao);
-            if (obedeceMaximoLigacoes(mst)) {
-                resultados.add(mst);
-            }
-
+            ParticaoCache melhorParticaoCache = particoes.get(melhorIndiceParticao);
+            Particao melhorParticao = melhorParticaoCache.getParticao();
+            ArrayList<Ligacao> ligacoes = melhorParticaoCache.getLigacoes();
             particoes.remove(melhorIndiceParticao);
 
-            ArrayList<Ligacao> diff = diferenca(mst, melhorParticao);
+            if (obedeceMaximoLigacoes(ligacoes)) {
+                resultados.add(ligacoes);
+                return resultados;
+            }
+
+            ArrayList<Ligacao> diff = diferenca(ligacoes, melhorParticao);
 
             if (diff.isEmpty()) {
                 continue;
@@ -173,9 +131,14 @@ public class ProcessadorComplexo extends ProcessadorLigacoes {
 
                 particao.getLigacoesObrigatorias().sort(Comparator.comparing(Ligacao::getCusto));
                 particao.getLigacoesRestritas().sort(Comparator.comparing(Ligacao::getCusto));
-            }
 
-            particoes.addAll(particoesDiff);
+                try {
+                    ParticaoCache particaoCache = new ParticaoCache(particao, informacoesArquivo);
+                    particoes.add(particaoCache);
+                } catch (Exception e) {
+                    // Não precisa fazer nada
+                }
+            }
         }
 
         return resultados;
