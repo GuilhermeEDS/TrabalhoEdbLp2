@@ -13,6 +13,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class LeitorArquivos {
+    public static String parseArgs(String[] args) throws Exception {
+        if (args.length != 1) {
+            throw new Exception();
+        }
+
+        return args[0];
+    }
+
     public static InformacoesArquivo lerArquivo(String caminhoArquivo) throws ArquivoInvalido {
         List<String> linhasArquivo;
         try {

@@ -1,5 +1,6 @@
 package main;
 
+import dominio.GerenciadorProcessador;
 import dominio.Ligacao;
 
 import java.io.*;
@@ -7,7 +8,17 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PrintFile {
-    public static void generateFile(ArrayList<ArrayList<Ligacao>> data, ArrayList<Integer> custos) throws Exception {
+    public static void generateFile(GerenciadorProcessador gerenciadorProcessador) throws IOException {
+        ArrayList<Ligacao> ligacoes = new ArrayList<>();
+        Integer custo = 0;
+
+        try {
+            ligacoes = gerenciadorProcessador.getLigacoes();
+            custo = gerenciadorProcessador.getCusto();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(-1);
+        }
         final String fileName = "resultado.txt";
 
         OutputStream os = new FileOutputStream("../data/" + fileName);
