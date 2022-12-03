@@ -3,10 +3,11 @@ package main;
 import dominio.Ligacao;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PrintFile {
-    public static void generateFile(ArrayList<ArrayList<Ligacao>> data) throws IOException {
+    public static void generateFile(ArrayList<ArrayList<Ligacao>> data, ArrayList<Integer> custos) throws Exception {
         final String fileName = "resultado.txt";
 
         OutputStream os = new FileOutputStream("../data/" + fileName);
@@ -14,6 +15,7 @@ public class PrintFile {
         BufferedWriter br = new BufferedWriter(wr);
 
         int[] tamanhos = getBiggerSize(data);
+        int maiorCusto = String.valueOf(getBiggerCost(custos)).length();
 
         br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
         br.newLine();
@@ -25,8 +27,10 @@ public class PrintFile {
         br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
         br.newLine();
 
-        for (ArrayList<Ligacao> ListaLigacoes : data) {
-            for (Ligacao ligacao : ListaLigacoes) {
+        for (int i = 0; i < data.size(); i++) {
+            ArrayList<Ligacao> listaLigacoes = data.get(i);
+
+            for (Ligacao ligacao : listaLigacoes) {
                 int casaA = ligacao.getCasa1().getId();
                 int sizeCasaA = String.valueOf(casaA).length();
 
@@ -41,8 +45,18 @@ public class PrintFile {
 
             }
 
+            // int custoTotal = ProcessadorLigacoes.calcularCusto(listaLigacoes);
+            int custoTotal = custos.get(i);
+
+            br.write("| O custo total é: " + (
+                String.valueOf(custoTotal).length() >= maiorCusto ? custoTotal : custoTotal + getCaracter( ( maiorCusto - custoTotal ), ' ') 
+            ) + 
+            getCaracter( ( ( 38 + tamanhos[3] ) - ( 19 + ( maiorCusto -  String.valueOf(custoTotal).length() ) ) )-1, ' ') +
+            "|"); // (26 + 3 + 9 + tamanhos[3]) - (19 + (maiorCusto - custoTotal))  
+            br.newLine();
             br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
             br.newLine();
+
         }
 
         br.close();
@@ -76,4 +90,10 @@ public class PrintFile {
         return String.valueOf(caracter).repeat(Math.max(0, quantidade));
     }
 
+    private static int getBiggerCost(ArrayList<Integer> custos) {
+        int response = 0;
+        for (var custo : custos)
+            response = custo > response ? custo : response;
+        return response;
+    }
 }

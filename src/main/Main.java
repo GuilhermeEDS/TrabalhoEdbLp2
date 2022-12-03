@@ -35,10 +35,10 @@ public class Main {
 
         long inicio = System.nanoTime();
         ArrayList<ArrayList<Ligacao>> res;
+
         if (PROCESSADOR_COMPLEXO) {
             ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
             res = processadorComplexo.processar();
-
         } else {
             ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
             res = processadorSimples.processar();
@@ -48,7 +48,13 @@ public class Main {
         System.out.println("Demorou " + (fim - inicio) / 1000000 + " ms");
 
         try {
-            PrintFile.generateFile(res);
+            ArrayList<Integer> custos = new ArrayList<>(res.size());
+
+            for ( var ligacoes : res ){
+                custos.add( ProcessadorLigacoes.calcularCusto(ligacoes) );
+            }
+
+            PrintFile.generateFile(res, custos);
         } catch (Exception e) {
             System.out.println("DEU ERRO NA HORA DE FAZER O ARQUIVO");
             System.out.println(e.getMessage());
