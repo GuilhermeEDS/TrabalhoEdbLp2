@@ -30,7 +30,7 @@ cd src && make
 Após executar o comando acima será gerado um jar, e para executar utilize o comando:
 
 ```shell
-java -jar ArvoreBuscaBinaria.jar <arquivo_valores> <tipo_de_execucao>
+java -jar ProjetoUnidade3.jar <arquivo_valores> <tipo_de_execucao>
 ```
 
 Onde `arquivo_valores` é o caminho para o arquivo contendo os valores a serem lidos; e `tipo_de_execucao` é qual o tipo de execução deverá ser feito, podendo ser `--simples` e `--complexo`.
