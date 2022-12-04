@@ -14,10 +14,9 @@ import java.util.List;
 
 public class LeitorArquivos {
     public static String parseArgs(String[] args) throws Exception {
-        if (args.length != 1) {
+        if (args.length <= 1 || args.length > 2) {
             throw new Exception();
         }
-
         return args[0];
     }
 

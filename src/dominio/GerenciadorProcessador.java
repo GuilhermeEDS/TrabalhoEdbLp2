@@ -23,7 +23,7 @@ public class GerenciadorProcessador {
         try {
             caminhoArquivo = LeitorArquivos.parseArgs(args);
         } catch (Exception e) {
-            System.out.println("Uso correto: java -jar arquivo <caminhoArquivo>\n\t<caminhoArquivo>: O caminho para o arquivo contendo " + "o máximo de ligações e o custo de cada ligação possível");
+            System.out.println("Uso correto: java -jar arquivo <caminhoArquivo> <tipoSolucao>\n\t<caminhoArquivo>: O caminho para o arquivo contendo " + "o máximo de ligações e o custo de cada ligação possível\n\t<tipoSolucao>: O tipo de solução que deverá ser executado, sendo --simples para executar a primeira forma e --complexo para a segunda forma\n\t\tSe for passado sem este executará a segunda forma");
             return;
         }
 
