@@ -3,7 +3,7 @@
     "configurations": [
         {
             "args": [
-                "data/B.txt"
+                "data/A.txt"
             ],
             "type": "java",
             "name": "Launch Main",

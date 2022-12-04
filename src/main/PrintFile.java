@@ -4,17 +4,16 @@ import dominio.GerenciadorProcessador;
 import dominio.Ligacao;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PrintFile {
     public static void generateFile(GerenciadorProcessador gerenciadorProcessador) throws IOException {
-        ArrayList<Ligacao> ligacoes = new ArrayList<>();
-        Integer custo = 0;
+        ArrayList<ArrayList<Ligacao>> solucoes = new ArrayList<>();
+        ArrayList<Integer> custos = new ArrayList<>();
 
         try {
-            ligacoes = gerenciadorProcessador.getLigacoes();
-            custo = gerenciadorProcessador.getCusto();
+            solucoes = gerenciadorProcessador.getSolucoes();
+            custos = gerenciadorProcessador.getCustos();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(-1);
@@ -25,7 +24,7 @@ public class PrintFile {
         Writer wr = new OutputStreamWriter(os);
         BufferedWriter br = new BufferedWriter(wr);
 
-        int[] tamanhos = getBiggerSize(data);
+        int[] tamanhos = getBiggerSize(solucoes);
         int maiorCusto = String.valueOf(getBiggerCost(custos)).length();
 
         br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
@@ -38,8 +37,8 @@ public class PrintFile {
         br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
         br.newLine();
 
-        for (int i = 0; i < data.size(); i++) {
-            ArrayList<Ligacao> listaLigacoes = data.get(i);
+        for (int i = 0; i < solucoes.size(); i++) {
+            ArrayList<Ligacao> listaLigacoes = solucoes.get(i);
 
             for (Ligacao ligacao : listaLigacoes) {
                 int casaA = ligacao.getCasa1().getId();
@@ -56,14 +55,9 @@ public class PrintFile {
 
             }
 
-            // int custoTotal = ProcessadorLigacoes.calcularCusto(listaLigacoes);
             int custoTotal = custos.get(i);
 
-            br.write("| O custo total é: " + (
-                String.valueOf(custoTotal).length() >= maiorCusto ? custoTotal : custoTotal + getCaracter( ( maiorCusto - custoTotal ), ' ') 
-            ) + 
-            getCaracter( ( ( 38 + tamanhos[3] ) - ( 19 + ( maiorCusto -  String.valueOf(custoTotal).length() ) ) )-1, ' ') +
-            "|"); // (26 + 3 + 9 + tamanhos[3]) - (19 + (maiorCusto - custoTotal))  
+            br.write("| O custo total é: " + (String.valueOf(custoTotal).length() >= maiorCusto ? custoTotal : custoTotal + getCaracter((maiorCusto - custoTotal), ' ')) + getCaracter(((38 + tamanhos[3]) - (19 + (maiorCusto - String.valueOf(custoTotal).length()))) - 1, ' ') + "|");
             br.newLine();
             br.write("#" + getCaracter(26 + 3 + 9 + tamanhos[3], '=') + "#");
             br.newLine();

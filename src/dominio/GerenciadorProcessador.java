@@ -3,6 +3,7 @@ package dominio;
 import excecao.ArquivoInvalido;
 import main.LeitorArquivos;
 import main.ProcessadorComplexo;
+import main.ProcessadorLigacoes;
 import main.ProcessadorSimples;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ public class GerenciadorProcessador {
     boolean executarProcessadorComplexo;
     Long tempoExecucao = null;
 
-    ArrayList<Ligacao> ligacoes = null;
-    Integer custo;
+    ArrayList<ArrayList<Ligacao>> solucoes = null;
+    ArrayList<Integer> custos = null;
     private boolean isProcessado = false;
 
     public GerenciadorProcessador(String[] args, boolean executarProcessadorComplexo) {
@@ -35,37 +36,43 @@ public class GerenciadorProcessador {
 
     public void executar() throws Exception {
         long inicio = System.nanoTime();
-        ArrayList<ArrayList<Ligacao>> res;
         if (executarProcessadorComplexo) {
             ProcessadorComplexo processadorComplexo = new ProcessadorComplexo(informacoesArquivo);
-            res = processadorComplexo.processar();
+            solucoes = processadorComplexo.processar();
+            custos = new ArrayList<>(solucoes.size());
+            for (ArrayList<Ligacao> solucao : solucoes) {
+                custos.add(ProcessadorLigacoes.calcularCusto(solucao));
+            }
         } else {
             ProcessadorSimples processadorSimples = new ProcessadorSimples(informacoesArquivo);
-            res = processadorSimples.processar();
+            solucoes = processadorSimples.processar();
         }
         long fim = System.nanoTime();
-        if (res.size() == 0) {
+        if (solucoes.size() == 0) {
             throw new Exception("Não foi possível encontrar uma árvore válida");
         }
         isProcessado = true;
 
-        ligacoes = res.get(0);
         tempoExecucao = (fim - inicio) / 1000000;
     }
 
-    public Integer getCusto() throws Exception {
-        if (!isProcessado) {
-            throw new Exception("Não foi processado");
-        }
-
-        return custo;
+    public InformacoesArquivo getInformacoesArquivo() {
+        return informacoesArquivo;
     }
 
-    public ArrayList<Ligacao> getLigacoes() throws Exception {
+    public ArrayList<Integer> getCustos() throws Exception {
         if (!isProcessado) {
             throw new Exception("Não foi processado");
         }
 
-        return ligacoes;
+        return custos;
+    }
+
+    public ArrayList<ArrayList<Ligacao>> getSolucoes() throws Exception {
+        if (!isProcessado) {
+            throw new Exception("Não foi processado");
+        }
+
+        return solucoes;
     }
 }
