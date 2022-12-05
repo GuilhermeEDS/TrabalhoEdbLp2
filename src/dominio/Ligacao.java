@@ -25,7 +25,7 @@ public class Ligacao {
 
     @Override
     public String toString() {
-        return casa1.getId() + "->" + casa2.getId();
+        return casa1.getId() + " -> " + casa2.getId();
     }
 
     public String minimo() {

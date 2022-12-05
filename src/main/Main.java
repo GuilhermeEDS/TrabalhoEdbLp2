@@ -3,25 +3,14 @@ package main;
 import javax.swing.JFrame;
 
 import dominio.GerenciadorProcessador;
+import dominio.Ligacao;
 import gui.Janela;
 
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        boolean executarProcessadorComplexo = true;
+        GerenciadorProcessador gerenciadorProcessador = new GerenciadorProcessador(args);
 
-        if ( args.length > 1) {
-            if ( args[1] == "--simples" ) {
-                executarProcessadorComplexo = false;
-            } else if ( args[1] == "--complexo" ) {
-                executarProcessadorComplexo = true;
-            } else {
-                System.out.println("Uso correto: java -jar arquivo <caminhoArquivo> <tipoSolucao>\n\t<caminhoArquivo>: O caminho para o arquivo contendo " + "o máximo de ligações e o custo de cada ligação possível\n\t<tipoSolucao>: O tipo de solução que deverá ser executado, sendo --simples para executar a primeira forma e --complexo para a segunda forma\n\t\tSe for passado sem este executará a segunda forma");
-                System.exit(-1);
-            }
-        }
-
-        GerenciadorProcessador gerenciadorProcessador = new GerenciadorProcessador(args, executarProcessadorComplexo);
         try {
             gerenciadorProcessador.executar();
         } catch (Exception e) {
@@ -35,6 +24,14 @@ public class Main {
             System.out.println("DEU ERRO NA HORA DE FAZER O ARQUIVO");
             System.out.println(e.getMessage());
         }
+
+        int size = gerenciadorProcessador.getSolucoes().get(0).size();
+        System.out.print("[ ");
+        for (int i = 0; i < size; i++ ) {
+            var ligacao = gerenciadorProcessador.getSolucoes().get(0).get(i);
+            System.out.print( ligacao + ( i == size - 1 ? " " : ", ") );
+        }
+        System.out.println("]");
 
         JFrame frame = new JFrame();
 
